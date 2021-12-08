@@ -1,22 +1,17 @@
-import express from "express";
 import sequelize from "./db/connection.js"
-const app = express()
-const port = 8000
+import app from "./app.js"
+require('dotenv').config()
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+
 async function connect(){
+  //Aqui colocaremos una creacion de tablas para mas adelante
   var connect = await sequelize.sync();
-  console.log("connected")
-  
-
 }
 
 
 async function main(){
-  const PORT= 8000;
-  await app.listen(PORT)
+  const port= process.env.PORT
+  await app.listen(port)
   await connect()
   console.log(`Example app listening at http://localhost:${port}`);
 }
