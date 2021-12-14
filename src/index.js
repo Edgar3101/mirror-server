@@ -6,6 +6,7 @@ require('dotenv').config()
 async function connect(){
   //Aqui colocaremos una creacion de tablas para mas adelante
   var connect = await sequelize.sync();
+  
 }
 
 
