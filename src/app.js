@@ -9,8 +9,10 @@ const app= express();
 app.use(fileUpload());
 
 // Static Files
-app.use(express.static('public'));
-app.use(express.static('upload'));
+
+
+
+app.use('/uploads', express.static(__dirname + '/public'));
 
 
 app.use("/", routerProduct);
