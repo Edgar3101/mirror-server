@@ -1,7 +1,7 @@
 import Product from "../models/Product"
 
-export async function getProducts(req, res){
-    res.render('home')
+export async function HomePage(req, res){
+    res.render('home');
 
 }
 

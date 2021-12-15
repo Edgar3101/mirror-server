@@ -1,10 +1,10 @@
 import {Router} from "express";
 const router = Router();
 
-import {getProducts} from "../controllers/getProducts.js"
+import {GetProducts} from "../controllers/apiProducts.js"
 
 
-router.get("/", getProducts );
+router.get("/", GetProducts );
 
 
 
