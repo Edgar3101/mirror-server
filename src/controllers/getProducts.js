@@ -22,9 +22,9 @@ export async function createProducts(req, res){
     if (err) return res.status(500).send(err);
     if(!err) {
         const product= Product.build({
-            title:"Mi producto uno",
-            description: "Mi descripcion",
-            price: 3,
+            title:req.body.nameproduct,
+            description: req.body.description,
+            price: req.body.price,
             image: sampleFile.name
       
         })

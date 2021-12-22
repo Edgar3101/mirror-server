@@ -5,13 +5,14 @@ const fileUpload = require('express-fileupload');
 import { engine } from 'express-handlebars';
 import path from "path";
 import helmet from "helmet";
+import cors from "cors";
 const app= express();
 
 app.use(fileUpload());
 
 // Static Files
 
-
+app.use(cors())
 
 app.use('/uploads', express.static(__dirname + '/public'));
 
