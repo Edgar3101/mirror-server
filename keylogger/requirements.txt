@@ -1,5 +1,10 @@
+certifi==2021.10.8
+charset-normalizer==2.0.9
 evdev==1.4.0
+idna==3.3
 pkg_resources==0.0.0
 pynput==1.7.5
 python-xlib==0.31
+requests==2.26.0
 six==1.16.0
+urllib3==1.26.7
