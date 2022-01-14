@@ -17,6 +17,8 @@ app.use(cors())
 app.use('/uploads', express.static(__dirname + '/public'));
 app.use('/media', express.static(__dirname + '/public'));
 
+app.use('/assets', express.static(__dirname + '/assets'));
+
 
 app.use("/", routerProduct);
 app.use("/api", routerAPI);
