@@ -847,6 +847,7 @@
                 </button>
               </div>
             </div>
+            <form action="/" method="POST" encType="multipart/form-data">
             <div class="card-body">
               <div class="form-group">
                 <label for="inputName">Nombre del producto</label>
@@ -872,9 +873,18 @@
                 <label for="inputProjectLeader">Cantidad</label>
                 <input type="text" id="inputProjectLeader" class="form-control">
               </div>
+               <div class="form-group">
+                <label for="inputProjectLeader">Foto de producto</label>
+              <input type="file" name="sampleFile" accept="image/*" />
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
+          <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Producto</button>
+          <!--
+           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
+           -->
+          </form>
           <!-- /.card -->
         </div>
         <div class="col-md-6">
@@ -888,17 +898,13 @@
               </div>
             </div>
             <div class="card-body">
-              <div class="form-group">
-                <label for="inputEstimatedBudget">Estimated budget</label>
-                <input type="number" id="inputEstimatedBudget" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="inputSpentBudget">Total amount spent</label>
-                <input type="number" id="inputSpentBudget" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="inputEstimatedDuration">Estimated project duration</label>
-                <input type="number" id="inputEstimatedDuration" class="form-control">
+            <div class="form-group">
+                <label for="inputStatus">Producto</label>
+                <select id="inputStatus" class="form-control custom-select">
+                  <option selected disabled>Seleccionar producto</option>
+                  <option>Producto 1</option>
+                  <option>Producto 2</option>
+                </select>
               </div>
             </div>
             <!-- /.card-body -->
@@ -906,12 +912,14 @@
           <!-- /.card -->
         </div>
       </div>
+      <!-- 
       <div class="row">
         <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancel</a>
-          <input type="submit" value="Create new Porject" class="btn btn-success float-right">
+          <a href="#" class="btn btn-secondary">Cancelar</a>
+          <input type="submit" value="Crear Producto" class="btn btn-success float-right">
         </div>
       </div>
+      -->
     </section>
     <!-- /.content -->
   </div>
