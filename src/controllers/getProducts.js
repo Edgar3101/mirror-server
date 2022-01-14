@@ -29,7 +29,7 @@ export async function createProducts(req, res){
       
         })
         product.save()
-        res.send("Image created");
+        res.redirect("/")
 
     }
   })
