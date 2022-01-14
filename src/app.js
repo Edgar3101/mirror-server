@@ -15,6 +15,7 @@ app.use(fileUpload());
 app.use(cors())
 
 app.use('/uploads', express.static(__dirname + '/public'));
+app.use('/media', express.static(__dirname + '/public'));
 
 
 app.use("/", routerProduct);

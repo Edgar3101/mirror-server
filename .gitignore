@@ -2,4 +2,6 @@ node_modules
 package-lock.json
 .env
 env
-/src/public/*
+/src/public/*.jpg
+/src/public/*.png
+/src/public/*.jpeg
