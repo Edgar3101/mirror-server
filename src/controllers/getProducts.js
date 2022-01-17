@@ -29,6 +29,7 @@ export async function createProducts(req, res){
       
         })
         product.save()
+        console.log("Se subio el producto correctamente");
         res.redirect("/")
 
     }
