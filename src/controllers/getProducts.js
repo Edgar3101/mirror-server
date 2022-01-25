@@ -1,7 +1,9 @@
 import Product from "../models/Product"
-
+const path = require("path");
 export async function HomePage(req, res){
-    res.render('panel');
+    const query= await Product.findAll();
+    console.log(query)
+    res.render('panel', {query});
 
 }
 
@@ -13,7 +15,15 @@ export async function createProducts(req, res){
     return res.status(400).send('No files were uploaded.');
   }
   sampleFile = req.files.sampleFile;
-  uploadPath = __dirname.split("/controllers")[0] + '/public/' + sampleFile.name;
+  if(__dirname.includes("\\")){
+    uploadPath = __dirname.split("/controllers")[0] + '\\public\\' + sampleFile.name
+  }else{
+    uploadPath=  __dirname.split("/controllers")[0] + "/public/" + sampleFile.name
+  }
+   
+   
+  
+  var path = require('path');
 
   console.log(sampleFile);
 
