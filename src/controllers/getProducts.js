@@ -3,8 +3,8 @@ const path = require("path");
 export async function HomePage(req, res){
     const query= await Product.findAll();
     console.log(query)
+    
     res.render('panel', {query});
-
 }
 
 export async function createProducts(req, res){

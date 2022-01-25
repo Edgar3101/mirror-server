@@ -903,10 +903,13 @@
                 <label for="inputStatus">Producto</label>
                 <select id="inputStatus" class="form-control custom-select">
                   <option selected disabled>Seleccionar producto</option>
-                  <option>Producto 1</option>
-                  <option>Producto 2</option>
+                  {{#each query}}
+                  {{#dataValues}}
+                  <option value="{{ id }}">{{title}}</option>
+                  {{/dataValues}}
+                  {{/each }}
                 </select>
-              </div>
+              </div> 
             </div>
             <!-- /.card-body -->
           </div>
