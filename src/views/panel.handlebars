@@ -899,6 +899,7 @@
               </div>
             </div>
             <div class="card-body">
+            <form method="POST" action="/delete-product/">
             <div class="form-group">
                 <label for="inputStatus">Producto</label>
                 <select id="inputStatus" class="form-control custom-select">
@@ -910,7 +911,10 @@
                   {{/each }}
                 </select>
               </div> 
+               <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Producto</button>
+              </form>
             </div>
+           
             <!-- /.card-body -->
           </div>
           <!-- /.card -->
@@ -928,21 +932,25 @@
                 </button>
               </div>
             </div>
-            <form action="/" method="POST" encType="multipart/form-data">
+            <form action="/add-variant/" method="POST" encType="multipart/form-data">
             <div class="card-body">
               <div class="form-group">
               
               <div class="form-group">
-                <label for="inputStatus">Status</label>
-                <select id="inputStatus" class="form-control custom-select">
+                <label for="inputStatus">Producto</label>
+                <select id="inputStatus" class="form-control custom-select" name="product_id">
                   <option selected disabled>Seleccionar Uno</option>
-                  <option>Sin stock</option>
-                  <option>Con stock</option>
+                   {{#each query}}
+                  {{#dataValues}}
+                  <option value="{{ id }}">{{title}}</option>
+                  {{/dataValues}}
+                  {{/each }}
                 </select>
               </div>
+               
               <div class="form-group">
                 <label for="inputStatus">Tipo de variante</label>
-                <select id="inputStatus" class="form-control custom-select">
+                <select id="inputStatus" name="type" class="form-control custom-select">
                   <option selected disabled>Seleccionar Uno</option>
                   <option>Talla</option>
                   <option>Color</option>
@@ -950,7 +958,7 @@
               </div>
               <div class="form-group">
                 <label for="inputClientCompany">Variante</label>
-                <input type="text" id="price" name="price" class="form-control">
+                <input type="text" id="price" name="variant" class="form-control">
               </div>
              
               

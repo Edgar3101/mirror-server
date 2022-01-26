@@ -1,4 +1,5 @@
 import Product from "../models/Product"
+import Variant from "../models/Variant";
 const path = require("path");
 export async function HomePage(req, res){
     const query= await Product.findAll();
@@ -46,3 +47,26 @@ export async function createProducts(req, res){
   })
   
 }
+
+export async function CreateVariant(req, res){
+  const creation = await Variant.build({
+    type: req.body.type,
+    description: req.body.variant,
+    productId: req.body.product_id
+  })
+  creation.save()
+  res.redirect("/")
+
+}
+
+export async function DeleteProduct(req, res){
+  const product = await Product.findOne({
+    where: {
+      id: req.body.product_Id
+    }
+  })
+  creation.drop()
+  res.redirect("/")
+
+}
+
