@@ -1,6 +1,6 @@
 import Product from "../models/Product"
 import Variant from "../models/Variant";
-
+import * as fs from 'fs';
 export async function HomePage(req, res){
     const query= await Product.findAll();
     console.log(query)
@@ -60,15 +60,21 @@ export async function CreateVariant(req, res){
 }
 
 export async function DeleteProduct(req, res){
-  import fs from "fs";
+  console.log(req.body)
   const product = await Product.findOne({
     where: {
-      id: req.body.product_Id
+      id: req.body.product_Id_delete
     }
   })
-  let path = __dirname.split("/controllers")[0] + "/public/" + product.image;
+  try{
+    let path = __dirname.split("/controllers")[0] + "/public/" + product.image;
   fs.unlinkSync(path);
-  product.drop()
+
+  }catch{
+    console.log("File already created")
+  }
+  
+  product.destroy()
   res.redirect("/")
 
 }

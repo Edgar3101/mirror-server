@@ -899,10 +899,10 @@
               </div>
             </div>
             <div class="card-body">
-            <form method="POST" action="/delete-product/">
+            <form method="POST" action="/delete-product/" encType="multipart/form-data">
             <div class="form-group">
                 <label for="inputStatus">Producto</label>
-                <select id="inputStatus" class="form-control custom-select">
+                <select id="inputStatus2" class="form-control custom-select" name="product_Id_delete">
                   <option selected disabled>Seleccionar producto</option>
                   {{#each query}}
                   {{#dataValues}}
