@@ -50,7 +50,7 @@ export async function createProducts(req, res){
 
 export async function CreateVariant(req, res){
   let variant ;
-  req.body.variant_color != '' ? variant = req.body.variant_color : variant = req.body.variant_size
+  req.body.type === 'color' ? variant = req.body.variant_color : variant = req.body.variant_size
   const creation = await Variant.build({
     type: req.body.type,
     description: variant,
