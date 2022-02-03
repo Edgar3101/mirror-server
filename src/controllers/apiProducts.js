@@ -7,6 +7,15 @@ export async function GetProducts(req, res){
     const query= await Product.findAll();
     res.json({query});
 }
+
+export async function getExactProduct(req, res){
+    const query = await  Product.findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+    return json([query])
+}
 export async function getCountofProduct(req, res){
     const query = await Product.count();
     res.json({query})
