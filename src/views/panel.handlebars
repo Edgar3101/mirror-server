@@ -1,174 +1,180 @@
-
 <body class="hold-transition sidebar-mini">
-<!-- Site wrapper -->
-<div class="wrapper">
-  <!-- Navbar -->
- 
-  <!-- /.navbar -->
+  <!-- Site wrapper -->
+  <div class="wrapper">
+    <!-- Navbar -->
 
-  <!-- Main Sidebar Container -->
-  
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Agregar Producto</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Project Add</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-<!-- MAIN --> 
-<!--Agregar Variantes de productos --> 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Agregar</h3>
+    <!-- /.navbar -->
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
+    <!-- Main Sidebar Container -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>Agregar Producto</h1>
             </div>
-            <form action="/" method="POST" encType="multipart/form-data">
-            <div class="card-body">
-              <div class="form-group">
-                <label for="inputName">Nombre del producto</label>
-                <input type="text" id="nameproduct"  name="nameproduct" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="inputDescription">Descripcion del producto</label>
-                <textarea id="description" name="description" class="form-control" rows="4"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="inputStatus">Status</label>
-                <select id="inputStatus" class="form-control custom-select">
-                  <option selected disabled>Seleccionar Uno</option>
-                  <option>Sin stock</option>
-                  <option>Con stock</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="inputClientCompany">Precio</label>
-                <input type="text" id="price" name="price" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="inputProjectLeader">Cantidad</label>
-                <input type="text" id="inputProjectLeader" class="form-control">
-              </div>
-               <div class="form-group">
-                <label for="inputProjectLeader">Foto de producto</label>
-              <input type="file" name="sampleFile" accept="image/*" />
-              </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Project Add</li>
+              </ol>
             </div>
-            <!-- /.card-body -->
           </div>
-          <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Producto</button>
-          <!--
+        </div><!-- /.container-fluid -->
+      </section>
+      <!-- MAIN -->
+      <!--Agregar Variantes de productos -->
+      <!-- Main content -->
+      <section class="content">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Agregar</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <form action="/" method="POST" encType="multipart/form-data">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="inputName">Nombre del producto</label>
+                    <input type="text" id="nameproduct" name="nameproduct" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputDescription">Descripcion del producto</label>
+                    <textarea id="description" name="description" class="form-control" rows="4"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputStatus">Status</label>
+                    <select id="inputStatus" class="form-control custom-select">
+                      <option selected disabled>Seleccionar Uno</option>
+                      <option>Sin stock</option>
+                      <option>Con stock</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputClientCompany">Precio</label>
+                    <input type="text" id="price" name="price" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputProjectLeader">Cantidad</label>
+                    <input type="text" id="inputProjectLeader" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputProjectLeader">Foto de producto</label>
+                    <input type="file" name="sampleFile" accept="image/*" />
+                  </div>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Producto</button>
+            <!--
            <input type="submit" value="Crear Producto" class="btn btn-success float-right">
            -->
-          </form>
-          <!-- /.card -->
-        </div>
-        <div class="col-md-6">
-          <div class="card card-secondary">
-            <div class="card-header">
-              <h3 class="card-title">Borrar</h3>
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
+            </form>
+            <!-- /.card -->
+          </div>
+          <div class="col-md-6">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Borrar</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
               </div>
+              <div class="card-body">
+                <form method="POST" action="/delete-product/" encType="multipart/form-data">
+                  <div class="form-group">
+                    <label for="inputStatus">Producto</label>
+                    <select id="inputStatus2" class="form-control custom-select" name="product_Id_delete">
+                      <option selected disabled>Seleccionar producto</option>
+                      {{#each query}}
+                      {{#dataValues}}
+                      <option value="{{ id }}">{{title}}</option>
+                      {{/dataValues}}
+                      {{/each }}
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Producto</button>
+                </form>
+              </div>
+
+              <!-- /.card-body -->
             </div>
-            <div class="card-body">
-            <form method="POST" action="/delete-product/" encType="multipart/form-data">
-            <div class="form-group">
-                <label for="inputStatus">Producto</label>
-                <select id="inputStatus2" class="form-control custom-select" name="product_Id_delete">
-                  <option selected disabled>Seleccionar producto</option>
-                  {{#each query}}
-                  {{#dataValues}}
-                  <option value="{{ id }}">{{title}}</option>
-                  {{/dataValues}}
-                  {{/each }}
-                </select>
-              </div> 
-               <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Producto</button>
+            <!-- /.card -->
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Agregar Variante de producto</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <form action="/add-variant/" method="POST" encType="multipart/form-data">
+                <div class="card-body">
+                  <div class="form-group">
+
+                    <div class="form-group">
+                      <label for="inputStatus">Producto</label>
+                      <select id="inputStatus" class="form-control custom-select" name="product_id">
+                        <option selected disabled>Seleccionar Uno</option>
+                        {{#each query}}
+                        {{#dataValues}}
+                        <option value="{{ id }}">{{title}}</option>
+                        {{/dataValues}}
+                        {{/each }}
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="inputStatus">Tipo de variante</label>
+                      <select id="inputStatus" name="type" class="form-control custom-select"
+                        onchange="GetStatus(this)">
+                        <option selected disabled>Seleccionar Uno</option>
+                        <option value="talla">Talla</option>
+                        <option value="color">Color</option>
+                      </select>
+                    </div>
+                    <!-- Esta es el input de color -->
+                    <div class="form-group" id="color">
+                      <label for="inputClientCompany">Color</label>
+                      <input type="color" name="variant_color" class="form-control">
+                    </div>
+                    <!-- Esta es el input de talla  -->
+                    <div class="form-group" id="size" hidden>
+                      <label for="inputClientCompany">Talla</label>
+                      <input type="text" name="variant_size" class="form-control">
+                    </div>
+
+
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <button type="submit" class="btn btn-success float-right" value="Save"> Agregar variante</button>
+                <!--
+           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
+           -->
               </form>
+              <!-- /.card -->
             </div>
-           
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-        </div>
-      </div>
-      <div class="row mt-3">
-        <div class="col-md-6">
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Agregar Variante de producto</h3>
 
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                  <i class="fas fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <form action="/add-variant/" method="POST" encType="multipart/form-data">
-            <div class="card-body">
-              <div class="form-group">
-              
-              <div class="form-group">
-                <label for="inputStatus">Producto</label>
-                <select id="inputStatus" class="form-control custom-select" name="product_id">
-                  <option selected disabled>Seleccionar Uno</option>
-                   {{#each query}}
-                  {{#dataValues}}
-                  <option value="{{ id }}">{{title}}</option>
-                  {{/dataValues}}
-                  {{/each }}
-                </select>
-              </div>
-               
-              <div class="form-group">
-                <label for="inputStatus">Tipo de variante</label>
-                <select id="inputStatus" name="type" class="form-control custom-select">
-                  <option selected disabled>Seleccionar Uno</option>
-                  <option>Talla</option>
-                  <option>Color</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="inputClientCompany">Variante</label>
-                <input type="text" id="price" name="variant" class="form-control">
-              </div>
-             
-              
-            </div>
-            <!-- /.card-body -->
           </div>
-          <button type="submit" class="btn btn-success float-right" value="Save"> Agregar variante</button>
-          <!--
-           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
-           -->
-          </form>
-          <!-- /.card -->
-        </div>
-
-      </div>
-      <!-- 
+          <!-- 
       <div class="row">
         <div class="col-12">
           <a href="#" class="btn btn-secondary">Cancelar</a>
@@ -176,27 +182,40 @@
         </div>
       </div>
       -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
-
-  <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 3.2.0-rc
+      </section>
+      <!-- /.content -->
     </div>
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
-  </footer>
+    <!-- /.content-wrapper -->
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
-</div>
-<!-- ./wrapper -->
+    <footer class="main-footer">
+      <div class="float-right d-none d-sm-block">
+        <b>Version</b> 3.2.0-rc
+      </div>
+      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    </footer>
 
-<!-- jQuery -->
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+      <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+  </div>
+  <!-- ./wrapper -->
+  <script>
+    //La idea es que generemos un input de color y en dado caso que no, uno de talla 
+    function GetStatus(obj) {
+      if (obj.value == "color"){
+        document.querySelector("#size").setAttribute("hidden", "");
+      document.querySelector("#color").removeAttribute("hidden", "");
+    }else{
+      document.querySelector("#color").setAttribute("hidden", "");
+      document.querySelector("#size").removeAttribute("hidden", "");
+      }
+    }
+
+  </script>
+  <!-- jQuery -->
 
 </body>
+
 </html>
