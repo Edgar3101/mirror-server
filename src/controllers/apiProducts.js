@@ -1,6 +1,7 @@
 import sequelize from "../db/connection";
 import Product from "../models/Product";
 import Variant from "../models/Variant";
+import CodeBar from "../models/CodeBar";
 
 export async function GetProducts(req, res){
 
@@ -42,3 +43,20 @@ export async function getVariantOfProduct(req, res){
     res.json({query})
 
 }
+export async function getProductByCodeBar(req, res){
+    //Primero debemos obtener el code_bar para buscar el producto
+    const codebar= await CodeBar.findOne({
+      where : {
+        code: req.params.code
+      }
+    });
+    //Una vez tengamos el codebar debemos buscar el producto
+    const product = await Product.findOne({
+      where: {
+        id: codebar.productId
+      }
+    })
+    res.json({ product });
+  
+  
+  }
