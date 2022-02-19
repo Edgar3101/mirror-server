@@ -1,6 +1,6 @@
 import sequelize from "./db/connection.js"
 import app from "./app.js"
-import Variant from "./models/Variant"
+
 require('dotenv').config()
 
 

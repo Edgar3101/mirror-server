@@ -19,10 +19,7 @@ const Product = sequelize.define('product', {
         type: DataTypes.DATE, defaultValue: DataTypes.NOW 
     },
     //Se supone que vamos a averiguar sipodemos tener una URL para la imagen
-    image : {
-        type: DataTypes.STRING, 
-        allowNull: false
-    }
+
 });
 
 export default Product;

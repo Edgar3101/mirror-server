@@ -1,12 +1,16 @@
 import sequelize from "../db/connection";
 import Product from "../models/Product";
-import Variant from "../models/Variant";
-import CodeBar from "../models/CodeBar";
+import VariantColor from "../models/Variant_Color";
+import Variant_Size from "../models/Variant_Size";
+
 
 export async function GetProducts(req, res){
+    //Para no tener problemas podemos armar querys personalizados en la API
 
-    const query= await Product.findAll();
-    res.json({query});
+    var product = await Product.findAll();
+    var variant_color= await VariantColor.findAll();
+    var variant_Size= await Variant_Size.findAll()
+    res.json({"product" : product, "color": variant_color, "variant_Size": variant_Size });
 }
 
 export async function getExactProduct(req, res){
@@ -14,8 +18,22 @@ export async function getExactProduct(req, res){
         where: {
             id: req.params.id
         }
+    }) 
+    //Es importante tener en cuenta que tambien debemos mandarle todo las variantes
+    const variant_color = await VariantColor.findAll({
+        where: {
+            productId: query.product.id
+        }
     })
-    return json([query])
+    list_of_id= variant_color.map(function(obj){
+        return obj.id
+    });
+    const variant_Size= await Variant_Size.findAll({
+        where: {
+            variant_color_id: list_of_id
+        }
+    })
+    return json({"product": query, "color": variant_color, "size": variant_Size});
 }
 export async function getCountofProduct(req, res){
     const query = await Product.count();
@@ -34,29 +52,53 @@ export async function getRandomProducts(req, res){
 
 export async function getVariantOfProduct(req, res){
     //Este modulo tiene el objetivo de entregar las variantes segun el id del producto
-    const query= await Variant.findAll({
+    const query= await VariantColor.findAll({
         where: {
             productId: req.params.id
         }
     
     })
-    res.json({query})
+    var list_of_id= query.map(function(obj){
+        return obj.id
+    })
+    sizes= await Variant_Size.findAll({
+        where: {
+            variant_color_id: list_of_id
+        }
+    })
+    res.json({"query": query, "sizes": sizez})
 
 }
+
+
+
 export async function getProductByCodeBar(req, res){
     //Primero debemos obtener el code_bar para buscar el producto
-    const codebar= await CodeBar.findOne({
-      where : {
-        code: req.params.code
-      }
-    });
-    //Una vez tengamos el codebar debemos buscar el producto
-    const product = await Product.findOne({
-      where: {
-        id: codebar.productId
-      }
-    })
-    res.json({ product });
+    try{
+        const sizes= await Variant_Size.findOne({
+            where : {
+              codebar: req.params.code
+            }
+          });
+
+          var color = await VariantColor.findOne({
+              where: {
+                  id: sizes.variant_color_id
+              }
+          })
+          //Una vez tengamos el codebar debemos buscar el producto
+          const product = await Product.findOne({
+            where: {
+              id: color.productId
+            }
+          })
+          res.json({ "product": product, "color": color, "sizes": sizes });
+
+    }catch(e){
+        console.log(e);
+        res.status(500).json({ "error": "error"});
+    }
+    
   
   
   }

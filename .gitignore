@@ -5,3 +5,4 @@ env
 /src/public/*.jpg
 /src/public/*.png
 /src/public/*.jpeg
+lib

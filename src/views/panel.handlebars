@@ -52,24 +52,8 @@
                     <textarea id="description" name="description" class="form-control" rows="4"></textarea>
                   </div>
                   <div class="form-group">
-                    <label for="inputStatus">Status</label>
-                    <select id="inputStatus" class="form-control custom-select">
-                      <option selected disabled>Seleccionar Uno</option>
-                      <option>Sin stock</option>
-                      <option>Con stock</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <label for="inputClientCompany">Precio</label>
                     <input type="text" id="price" name="price" class="form-control">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputProjectLeader">Cantidad</label>
-                    <input type="text" id="inputProjectLeader" class="form-control">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputProjectLeader">Foto de producto</label>
-                    <input type="file" name="sampleFile" accept="image/*" />
                   </div>
                 </div>
                 <!-- /.card-body -->
@@ -117,7 +101,7 @@
           <div class="col-md-6">
             <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Agregar Variante de producto</h3>
+                <h3 class="card-title">Colores disponibles del Producto</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -125,7 +109,8 @@
                   </button>
                 </div>
               </div>
-              <form action="/add-variant/" method="POST" encType="multipart/form-data">
+              <!--  Este card es para agregar la variante de color-->
+              <form action="/add-variant/color/" method="POST" encType="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
 
@@ -134,20 +119,10 @@
                       <select id="inputStatus" class="form-control custom-select" name="product_id">
                         <option selected disabled>Seleccionar Uno</option>
                         {{#each query}}
-                        {{#dataValues}}
+                          {{#dataValues}}
                         <option value="{{ id }}">{{title}}</option>
-                        {{/dataValues}}
+                          {{/dataValues}}
                         {{/each }}
-                      </select>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="inputStatus">Tipo de variante</label>
-                      <select id="inputStatus" name="type" class="form-control custom-select"
-                        onchange="GetStatus(this)">
-                        <option selected disabled>Seleccionar Uno</option>
-                        <option value="talla">Talla</option>
-                        <option value="color">Color</option>
                       </select>
                     </div>
                     <!-- Esta es el input de color -->
@@ -155,25 +130,86 @@
                       <label for="inputClientCompany">Color</label>
                       <input type="color" name="variant_color" class="form-control">
                     </div>
-                    <!-- Esta es el input de talla  -->
-                    <div class="form-group" id="size" hidden>
-                      <label for="inputClientCompany">Talla</label>
-                      <input type="text" name="variant_size" class="form-control">
-                    </div>
-
-
+                    <!-- Este va a ser el input de la imagen -->
+                    <h3>Subir foto del producto</h3>
+                    <input type="file" name="sampleFile" accept="image/*" />
+                   
                   </div>
                   <!-- /.card-body -->
                 </div>
-                <button type="submit" class="btn btn-success float-right" value="Save"> Agregar variante</button>
+                
                 <!--
            <input type="submit" value="Crear Producto" class="btn btn-success float-right">
            -->
-              </form>
+              
               <!-- /.card -->
             </div>
+            <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Color</button>
+            </form>
 
           </div>
+          </div>
+
+          <!-- Este es el tercer modal para poder crear variantes de talla -->
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Tallas disponibles del Producto</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <form action="/add-variant/size/" method="POST" encType="multipart/form-data">
+                <div class="card-body">
+                  <div class="form-group">
+
+                    <div class="form-group">
+                      <label for="inputStatus">Producto</label>
+                      <select id="inputStatus" class="form-control custom-select" name="variant_color_id">
+                        <option selected disabled>Seleccionar Uno</option>
+                        {{#each color}}
+                          {{#dataValues}}
+                        <option value="{{ id }}" style="color:{{color}}"> color: {{ color }}</option>
+                          {{/dataValues}}
+                        {{/each }}
+                      </select>
+                    </div>
+                    <!-- Esta es el input de talla -->
+                    <div class="form-group" id="size">
+                      <label for="inputClientCompany">Talla</label>
+                      <input type="text" name="variant_size" class="form-control">
+                    </div>
+                    <!-- Este va a ser el input del stock -->
+                <div class="form-group" id="stock">
+                      <label for="inputClientCompany">Stock</label>
+                      <input type="number" name="stock" class="form-control">
+                    </div>
+                  </div>
+                  <!-- Este va a ser para el codebar -->
+                   <div class="form-group" id="codebar">
+                      <label for="inputClientCompany">Codigo de Barras</label>
+                      <input type="text" name="codebar" class="form-control">
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                
+                <!--
+           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
+           -->
+              
+              <!-- /.card -->
+              <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Talla</button>
+            </div>
+            
+            </form>
+
+          </div>
+        
           <!-- 
       <div class="row">
         <div class="col-12">
@@ -201,19 +237,7 @@
     <!-- /.control-sidebar -->
   </div>
   <!-- ./wrapper -->
-  <script>
-    //La idea es que generemos un input de color y en dado caso que no, uno de talla 
-    function GetStatus(obj) {
-      if (obj.value == "color"){
-        document.querySelector("#size").setAttribute("hidden", "");
-      document.querySelector("#color").removeAttribute("hidden", "");
-    }else{
-      document.querySelector("#color").setAttribute("hidden", "");
-      document.querySelector("#size").removeAttribute("hidden", "");
-      }
-    }
 
-  </script>
   <!-- jQuery -->
 
 </body>
