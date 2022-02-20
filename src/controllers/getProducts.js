@@ -90,7 +90,7 @@ export async function DeleteProduct(req, res) {
   })
   try {
    
-    const colors= VariantColor.findAll({ where: { productId: product.id}});
+    const colors= await VariantColor.findAll({ where: { productId: product.id}});
     const list_of_color_id= colors.map(function(ob){ return obj.id});
     VariantSize.destroy({ where: {variant_color_id: list_of_color_id}});
     colors.destroy();
