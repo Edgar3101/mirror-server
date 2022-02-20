@@ -8,7 +8,8 @@ import VariantColor from "../models/Variant_Color";
 export async function HomePage(req, res) {
   const query = await Product.findAll();
   const color= await VariantColor.findAll();
-  res.render('panel', { "query": query, "color": color });
+  const sizes= await VariantSize.findAll();
+  res.render('panel', { "query": query, "color": color, "sizes": sizes });
 }
 
 //Esta vista es solo para crear los productos
@@ -52,7 +53,7 @@ export async function CreateVariantColor(req, res) {
       const color = VariantColor.build({
         color: req.body.variant_color,
         image: sampleFile.name,
-        product_Id: req.body.product_id
+        productId: req.body.product_id
       })
       color.save()
       console.log("Se subio la variante correctamente");

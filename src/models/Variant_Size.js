@@ -17,7 +17,7 @@ const VariantSize = sequelize.define('variant_Size', {
         }
    
 });
-VariantColor.hasMany(VariantSize);
+VariantColor.hasMany(VariantSize,  {foreignKey: "variant_color_id"});
 VariantSize.belongsTo(VariantColor, {foreignKey: "variant_color_id"})
 
 export default VariantSize;

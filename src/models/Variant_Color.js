@@ -13,7 +13,7 @@ const VariantColor = sequelize.define('variant_color', {
     },
    
 });
-Product.hasMany(VariantColor);
+Product.hasMany(VariantColor, {foreignKey: "productId"});
 VariantColor.belongsTo(Product, {foreignKey: "productId"})
 
 export default VariantColor;

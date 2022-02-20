@@ -98,7 +98,11 @@ export async function getProductByCodeBar(req, res){
         console.log(e);
         res.status(500).json({ "error": "error"});
     }
-    
-  
-  
   }
+
+export async function getVariants(req, res){
+    var products= await Product.findAll();
+    var colors= await VariantColor.findAll();
+    var sizes= await Variant_Size.findAll();
+    res.json({ "colors": colors, "sizes": sizes, "products": products});
+}

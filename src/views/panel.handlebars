@@ -169,13 +169,10 @@
 
                     <div class="form-group">
                       <label for="inputStatus">Producto</label>
-                      <select id="inputStatus" class="form-control custom-select" name="variant_color_id">
+                      <select class="form-control custom-select" id="variant_color_id" name="variant_color_id">
                         <option selected disabled>Seleccionar Uno</option>
-                        {{#each color}}
-                          {{#dataValues}}
-                        <option value="{{ id }}" style="color:{{color}}"> color: {{ color }}</option>
-                          {{/dataValues}}
-                        {{/each }}
+                          
+                    
                       </select>
                     </div>
                     <!-- Esta es el input de talla -->
@@ -239,6 +236,39 @@
   <!-- ./wrapper -->
 
   <!-- jQuery -->
+
+ <script>
+   window.onload= function(){
+     fetch("api/variants/")
+     .then(res => res.json())
+     .then(data => {
+
+       var products= data.products;
+       var colors= data.colors;
+       colors.map(function(obj) {
+         //Luego debemos conseguir el index 
+         let index;
+         for(let i=0; i<products.length; i++){
+            if(products[i].id == obj.productId){
+              index= i;
+              break
+            }
+         }
+         var text= products[index].title + " " + obj.color;
+         var option= document.createElement("option");
+         option.innerText= text;
+         option.value= obj.id;
+         option.style.color= obj.color;
+         document.querySelector("#variant_color_id").appendChild(option);
+
+
+       })
+     })
+
+
+   }
+
+ </script> 
 
 </body>
 

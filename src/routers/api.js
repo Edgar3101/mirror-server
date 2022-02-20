@@ -1,11 +1,12 @@
 import {Router} from "express";
 const router = Router();
 
-import {GetProducts, getCountofProduct, getRandomProducts, getVariantOfProduct, getExactProduct,
+import {GetProducts, getCountofProduct, getRandomProducts,  getVariants ,getVariantOfProduct, getExactProduct,
  getProductByCodeBar} from "../controllers/apiProducts.js"
 
 
 router.get("/", GetProducts );
+router.get("/variants", getVariants);
 router.get("/count", getCountofProduct);
 router.get("/random", getRandomProducts);
 router.get("/variant/:id", getVariantOfProduct);
