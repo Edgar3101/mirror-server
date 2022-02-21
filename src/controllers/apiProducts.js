@@ -9,7 +9,7 @@ export async function GetProducts(req, res){
 
     var product = await Product.findAll();
     var variant_color= await VariantColor.findAll();
-    var variant_Size= await Variant_Size.findAll()
+    var variant_Size= await Variant_Size.findAll();
     res.json({"product" : product, "color": variant_color, "variant_Size": variant_Size });
 }
 
@@ -61,12 +61,12 @@ export async function getVariantOfProduct(req, res){
     var list_of_id= query.map(function(obj){
         return obj.id
     })
-    sizes= await Variant_Size.findAll({
+    var sizes= await Variant_Size.findAll({
         where: {
             variant_color_id: list_of_id
         }
     })
-    res.json({"query": query, "sizes": sizez})
+    res.json({"query": query, "sizes": sizes})
 
 }
 
