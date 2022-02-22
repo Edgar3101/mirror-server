@@ -45,8 +45,9 @@ export async function getRandomProducts(req, res){
     order: sequelize.random(),
     limit: 8
     
-    })
-    res.json({query})
+    });
+    const colors= await VariantColor.findAll();
+    res.json({"query": query, "colors": colors})
 
 }
 

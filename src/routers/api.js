@@ -6,7 +6,7 @@ import {GetProducts, getCountofProduct, getRandomProducts,  getVariants ,getVari
 
 
 router.get("/", GetProducts );
-router.get("/variants", getVariants);
+router.get("/variants/", getVariants);
 router.get("/count", getCountofProduct);
 router.get("/random", getRandomProducts);
 router.get("/variant/:id", getVariantOfProduct);
