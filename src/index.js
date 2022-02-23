@@ -1,6 +1,7 @@
 import sequelize from "./db/connection.js"
 import app from "./app.js"
 
+
 require('dotenv').config()
 
 
@@ -14,7 +15,8 @@ async function connect(){
 
 async function main(){
   const port= process.env.PORT
-  await app.listen(port)
+  app.listen(port)
+
   await connect()
   console.log(`Example app listening at http://localhost:${port}`);
 }

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js 8001",
-    "build": "./node_modules/.bin/babel src --out-dir lib"
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "socket": "nodemon --exec babel-node src/socket.js"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,9 @@
     "helmet": "^4.6.0",
     "mariadb": "^2.5.5",
     "nodemon": "^2.0.15",
-    "sequelize": "^6.12.0-beta.1"
+    "sequelize": "^6.12.0-beta.1",
+    "socket.io": "^4.4.1",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
