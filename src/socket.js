@@ -10,19 +10,17 @@ const server = http.createServer(app);
 //initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', (ws) => {
-    console.log("connected")
-    //connection is up, let's add a simple simple event
-    ws.on('data', (message) => {
-
-        //log the received message and send it back to the client
-        console.log('received: %s', message);
-        ws.send(`Hello, you sent -> ${message}`);
+wss.on("connection", function connection(ws) {
+  ws.on("message", function incoming(message, isBinary) {
+    console.log(message.toString(), isBinary);
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(message.toString());
+      }
     });
-
-    //send immediatly a feedback to the incoming connection    
-    ws.send('Hi there, I am a WebSocket server');
+  });
 });
+//En este casi ya tenemos casi todo 
 
 //start our server
 server.listen(8002, () => {
