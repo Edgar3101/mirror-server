@@ -2,7 +2,7 @@ import Product from "../models/Product"
 import VariantSize from "../models/Variant_Size";
 import * as fs from 'fs';
 import VariantColor from "../models/Variant_Color";
-
+import * as path from "path";
 
 //Esta vista se queda igual 
 export async function HomePage(req, res) {
@@ -36,8 +36,9 @@ export async function CreateVariantColor(req, res) {
     return res.status(400).send('No files were uploaded.');
   }
   sampleFile = req.files.sampleFile;
-  if (__dirname.includes("\\")) {
-    uploadPath = __dirname.split("/controllers")[0] + '\\public\\' + sampleFile.name
+  var isWin = process.platform === "win32";
+  if (isWin) {
+    uploadPath = __dirname.split("\controllers")[0] + "\public\\" + sampleFile.name
   } else {
     uploadPath = __dirname.split("/controllers")[0] + "/public/" + sampleFile.name
   }
