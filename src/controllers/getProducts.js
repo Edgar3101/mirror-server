@@ -92,14 +92,30 @@ export async function DeleteProduct(req, res) {
   try {
    
     const colors= await VariantColor.findAll({ where: { productId: product.id}});
-    const list_of_color_id= colors.map(function(ob){ return obj.id});
-    VariantSize.destroy({ where: {variant_color_id: list_of_color_id}});
-    colors.destroy();
+    const list_of_color_id= colors.map(function(obj){ return obj.id});
+    const sizes= await VariantSize.findAll({ where: {variant_color_id: list_of_color_id}});
+    sizes.map(obj => {
+      VariantSize.destroy({
+        where: {
+          id: obj.id
+        }
+      })
+
+    })
+
+    colors.map(obj => {
+      VariantColor.destroy({
+        where :{
+          id: obj.id
+        }
+      })
+    })
   } catch {
-    console.log("File already created")
+    console.log("error")
   }
 
   product.destroy()
+  console.log("Hello World")
   res.redirect("/")
 
 }
