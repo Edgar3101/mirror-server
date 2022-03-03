@@ -25,11 +25,23 @@ export async function createProducts(req, res) {
     price: req.body.price
 
   })
-  const category= await Categories.create({
+  
+  var category= await Categories.findOne({
     name: req.body.category
   })
-  console.log(category)
-  console.log(category.dataValues.id)
+  if(!category){
+    var category= await Categories.create({
+    name: req.body.category
+  })
+
+  }
+
+  
+    
+
+  
+  
+
   const productCategory= await ProductCategories.create({
     productId: product.dataValues.id,
     categoryId: category.dataValues.id
