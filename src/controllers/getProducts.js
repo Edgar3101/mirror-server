@@ -3,24 +3,37 @@ import VariantSize from "../models/Variant_Size";
 import * as fs from 'fs';
 import VariantColor from "../models/Variant_Color";
 import * as path from "path";
+import Categories from "../models/Categories";
+import ProductCategories from "../models/ProductCategories";
+
+
 
 //Esta vista se queda igual 
 export async function HomePage(req, res) {
   const query = await Product.findAll();
   const color= await VariantColor.findAll();
   const sizes= await VariantSize.findAll();
-  res.render('panel', { "query": query, "color": color, "sizes": sizes });
+  const categories= await Categories.findAll();
+  res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories});
 }
 
 //Esta vista es solo para crear los productos
 export async function createProducts(req, res) {
-  const product = Product.build({
+  const product = await Product.create({
     title: req.body.nameproduct,
     description: req.body.description,
     price: req.body.price
 
   })
-  product.save();
+  const category= await Categories.create({
+    name: req.body.category
+  })
+  console.log(category)
+  console.log(category.dataValues.id)
+  const productCategory= await ProductCategories.create({
+    productId: product.dataValues.id,
+    categoryId: category.dataValues.id
+  })
   console.log("Se subio el producto correctamente");
   res.redirect("/")
 

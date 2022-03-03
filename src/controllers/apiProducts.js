@@ -2,6 +2,8 @@ import sequelize from "../db/connection";
 import Product from "../models/Product";
 import VariantColor from "../models/Variant_Color";
 import Variant_Size from "../models/Variant_Size";
+import Categories from "../models/Categories";
+import ProductCategories from "../models/ProductCategories";
 
 
 export async function GetProducts(req, res){
@@ -10,7 +12,10 @@ export async function GetProducts(req, res){
     var product = await Product.findAll();
     var variant_color= await VariantColor.findAll();
     var variant_Size= await Variant_Size.findAll();
-    res.json({"product" : product, "color": variant_color, "variant_Size": variant_Size });
+    const categories= await Categories.findAll();
+    const productCategorie= await ProductCategories.findAll();
+    res.json({"product" : product, "color": variant_color, "variant_Size": variant_Size,
+    "categories": categories, "productCategorie": productCategorie });
 }
 
 export async function getExactProduct(req, res){
@@ -40,12 +45,27 @@ export async function getCountofProduct(req, res){
     res.json({query})
 }
 export async function getRandomProducts(req, res){
-    //Este modulo tiene el objetivo de entregar productos aleatorios al espejo
-    const query= await Product.findAll({
-    order: sequelize.random(),
-    limit: 8
+    //La idea de ahora en adelante es que los productos que se obtengan se van a tener que obtener en base a la categoria
+    const productcategorie= await ProductCategories.findAll({
+        productId: req.params.id
+    })
+    const count = await Product.count({ where : {   id : productcategorie.dataValues.productId }});
+    if(count < 4){
+        const query= await Product.findAll({
+            order: sequelize.random(),
+            limit: 8
+            
+            });
+    }else {
+        const query= await Product.findAll({
+            where: { id: productcategorie.dataValues.productId },
+            order: sequelize.random(),
+            limit: 8,
+            
+            });
+
+    }
     
-    });
     const colors= await VariantColor.findAll();
     res.json({"query": query, "colors": colors})
 
