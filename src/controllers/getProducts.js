@@ -11,10 +11,10 @@ import ProductCategories from "../models/ProductCategories";
 //Esta vista se queda igual 
 export async function HomePage(req, res) {
   const query = await Product.findAll();
-  const color= await VariantColor.findAll();
-  const sizes= await VariantSize.findAll();
-  const categories= await Categories.findAll();
-  res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories});
+  const color = await VariantColor.findAll();
+  const sizes = await VariantSize.findAll();
+  const categories = await Categories.findAll();
+  res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories });
 }
 
 //Esta vista es solo para crear los productos
@@ -25,24 +25,22 @@ export async function createProducts(req, res) {
     price: req.body.price
 
   })
-  
-  var category= await Categories.findOne({
-    name: req.body.category
+
+  var category = await Categories.findOne({
+    where: {
+      name: req.body.category
+    }
+
   })
-  if(!category){
-    var category= await Categories.create({
-    name: req.body.category
-  })
+  console.log(category)
+  if (!category) {
+    var category = await Categories.create({
+      name: req.body.category
+    })
 
   }
 
-  
-    
-
-  
-  
-
-  const productCategory= await ProductCategories.create({
+  const productCategory = await ProductCategories.create({
     productId: product.dataValues.id,
     categoryId: category.dataValues.id
   })
@@ -116,10 +114,10 @@ export async function DeleteProduct(req, res) {
     }
   })
   try {
-   
-    const colors= await VariantColor.findAll({ where: { productId: product.id}});
-    const list_of_color_id= colors.map(function(obj){ return obj.id});
-    const sizes= await VariantSize.findAll({ where: {variant_color_id: list_of_color_id}});
+
+    const colors = await VariantColor.findAll({ where: { productId: product.id } });
+    const list_of_color_id = colors.map(function (obj) { return obj.id });
+    const sizes = await VariantSize.findAll({ where: { variant_color_id: list_of_color_id } });
     sizes.map(obj => {
       VariantSize.destroy({
         where: {
@@ -131,7 +129,7 @@ export async function DeleteProduct(req, res) {
 
     colors.map(obj => {
       VariantColor.destroy({
-        where :{
+        where: {
           id: obj.id
         }
       })
