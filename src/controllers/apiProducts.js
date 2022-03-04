@@ -55,7 +55,7 @@ export async function getRandomProducts(req, res) {
     });
 
     const list_of_id = await productcategories.map(function (obj) { return obj.dataValues.productId })
-    const query = productcategories.length > 3 ? await Product.findAll({ where: { id: list_of_id }, order: sequelize.random(), limit: 3}) : await Product.findAll({ order: sequelize.random(), limit: 3 }) 
+    const query = productcategories.length > 2 ? await Product.findAll({ where: { id: list_of_id }, order: sequelize.random(), limit: 3}) : await Product.findAll({ order: sequelize.random(), limit: 3 }) 
 
     console.log(query)
 
