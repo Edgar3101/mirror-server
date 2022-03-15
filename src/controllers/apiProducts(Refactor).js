@@ -59,12 +59,18 @@ async function getExactProduct(code){
 
 async function getProductsRelated(obj){
 
-    const productCategories= await ProductCategories.findAll({
+    const preproductCategories= await ProductCategories.findOne({
         where: {
             productId: obj.id
         }
     })
+    const productCategories = await ProductCategories.findAll({
+        where: {
+            categoryId: preproductCategories.dataValues.categoryId
+        }
+    })
     const list_of_id= productCategories.map(function(product){ return product.dataValues.productId });
+    console.log(list_of_id)
 
     let queryReturn = {}
 
