@@ -30,11 +30,12 @@ async function getExactProduct(code){
         }
     });
     //Se supone que esto debe tener un variantColorId, entonces buscamos todos los sizes que tengan ese color
+    /*
     const all_sizes= await Variant_Size.findAll({ //Esta va a ser la lista de todos los sizes que nos interesan
         where: {
             variant_color_id: size_exact.variant_color_id
         }
-    })
+    }) */
     //Luego debe seguir la lista de todos los colores que necesitamos 
     const color_exact= await VariantColor.findOne({
         where: {
@@ -44,6 +45,12 @@ async function getExactProduct(code){
     const all_colors= await VariantColor.findAll({
         where: {
             productId: color_exact.dataValues.productId
+        }
+    })
+    const list_of_id= all_colors.map(function(obj) { return obj.dataValues.id});
+    const all_sizes= await Variant_Size.findAll({
+        where: {
+            variant_color_id: list_of_id
         }
     })
     const product= await Product.findOne({
