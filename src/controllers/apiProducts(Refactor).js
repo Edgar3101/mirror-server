@@ -70,8 +70,6 @@ async function getProductsRelated(obj){
         }
     })
     const list_of_id= productCategories.map(function(product){ return product.dataValues.productId });
-    console.log(list_of_id)
-
     let queryReturn = {}
 
     for(let i=0; i<list_of_id.length; i++){
