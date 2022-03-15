@@ -1,17 +1,11 @@
 import {Router} from "express";
 const router = Router();
 
-import {GetProducts, getCountofProduct, getRandomProducts,  getVariants ,getVariantOfProduct, getExactProduct,
- getProductByCodeBar} from "../controllers/apiProducts.js"
+import {getProducts} from "../controllers/apiProducts(Refactor)"
 
 
-router.get("/", GetProducts );
-router.get("/variants/", getVariants);
-router.get("/count", getCountofProduct);
-router.get("/random/:id", getRandomProducts); //La idea es que le mandemos ID de categoria
-router.get("/variant/:id", getVariantOfProduct);
-router.get("/:id", getExactProduct);
-router.get("/code/:code", getProductByCodeBar)
+router.get("/:codebar", getProducts );
+
 
 
 
