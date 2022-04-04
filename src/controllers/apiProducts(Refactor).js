@@ -110,10 +110,12 @@ async function getSubData(productId) {
 export async function getVariant(req, res) {
 
     try {
-        const products = await Product.findAll({});
-        const colors = await VariantColor.findAll({});
-
-        res.json({ "products": products, "colors": colors })
+        const colors = await VariantColor.findAll({
+            where: {
+                productId: req.params.product
+            }
+        });
+        res.json({"colors": colors })
     } catch (error) {
         res.json({ "error": error })
     }

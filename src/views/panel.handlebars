@@ -171,8 +171,20 @@
                 <div class="card-body">
                   <div class="form-group">
 
-                    <div class="form-group">
+                     <div class="form-group">
                       <label for="inputStatus">Producto</label>
+                      <select id="inputStatusColor" required class="form-control custom-select" onchange="getColor(this);"name="product_id">
+                        <option selected value="null">Seleccionar Uno</option>
+                        {{#each query}}
+                          {{#dataValues}}
+                        <option value="{{ id }}">{{title}}</option>
+                          {{/dataValues}}
+                        {{/each }}
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="inputStatus">Color</label>
                       <select class="form-control custom-select" id="variant_color_id" name="variant_color_id">
                         <option selected disabled>Seleccionar Uno</option>
                                           
@@ -257,7 +269,7 @@
     </script>
 
  <script>
-   
+  /* 
    window.onload= function(){
      fetch("api/variant/")
      .then(res => res.json())
@@ -286,6 +298,22 @@
      })
 
 
+   }
+   */
+   function getColor(obj){
+     console.log(obj)
+     fetch("/api/variant/" + obj.value)
+     .then(res => res.json())
+     .then(data => {
+       for(const i in data.colors){
+         var option= document.createElement("option");
+         option.innerText= "Color: " + data.colors[i].color;
+         option.value= data.colors[i].id;
+         option.style.color= data.colors[i].color;
+         document.querySelector("#variant_color_id").appendChild(option);
+       }
+
+     })
    }
 
  </script> 
