@@ -175,7 +175,7 @@
                       <label for="inputStatus">Producto</label>
                       <select class="form-control custom-select" id="variant_color_id" name="variant_color_id">
                         <option selected disabled>Seleccionar Uno</option>
-                          
+                                          
                     
                       </select>
                     </div>
@@ -253,11 +253,13 @@
       
     })
 
+ 
     </script>
 
  <script>
+   
    window.onload= function(){
-     fetch("api/variants/")
+     fetch("api/variant/")
      .then(res => res.json())
      .then(data => {
 

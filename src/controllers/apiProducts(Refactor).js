@@ -6,24 +6,24 @@ import ProductCategories from "../models/ProductCategories";
 
 
 
-export async function getProducts(req, res){
+export async function getProducts(req, res) {
 
-    try{
+    try {
 
-        const exactProduct= await getExactProduct(req.params.codebar);
-        const relatedProducts= await getProductsRelated(exactProduct.dataValues);  
-        res.json({ "product": exactProduct, "related": relatedProducts})
+        const exactProduct = await getExactProduct(req.params.codebar);
+        const relatedProducts = await getProductsRelated(exactProduct.dataValues);
+        res.json({ "product": exactProduct, "related": relatedProducts })
 
-    }catch (error){
+    } catch (error) {
         console.log(error)
-        res.status(500).json({ "error": error})
+        res.status(500).json({ "error": error })
 
     }
 
 }
 
 
-async function getExactProduct(code){
+async function getExactProduct(code) {
     const size_exact = await Variant_Size.findOne({
         where: {
             codebar: code
@@ -37,36 +37,36 @@ async function getExactProduct(code){
         }
     }) */
     //Luego debe seguir la lista de todos los colores que necesitamos 
-    const color_exact= await VariantColor.findOne({
+    const color_exact = await VariantColor.findOne({
         where: {
             id: size_exact.variant_color_id
         }
     })
-    const all_colors= await VariantColor.findAll({
+    const all_colors = await VariantColor.findAll({
         where: {
             productId: color_exact.dataValues.productId
         }
     })
-    const list_of_id= all_colors.map(function(obj) { return obj.dataValues.id});
-    const all_sizes= await Variant_Size.findAll({
+    const list_of_id = all_colors.map(function (obj) { return obj.dataValues.id });
+    const all_sizes = await Variant_Size.findAll({
         where: {
             variant_color_id: list_of_id
         }
     })
-    const product= await Product.findOne({
+    const product = await Product.findOne({
         where: {
             id: color_exact.dataValues.productId
         }
     })
 
-    product.dataValues.colors= all_colors
-    product.dataValues.sizes= all_sizes
+    product.dataValues.colors = all_colors
+    product.dataValues.sizes = all_sizes
     return product;
 }
 
-async function getProductsRelated(obj){
+async function getProductsRelated(obj) {
 
-    const preproductCategories= await ProductCategories.findOne({
+    const preproductCategories = await ProductCategories.findOne({
         where: {
             productId: obj.id
         }
@@ -76,33 +76,46 @@ async function getProductsRelated(obj){
             categoryId: preproductCategories.dataValues.categoryId
         }
     })
-    const list_of_id= productCategories.map(function(product){ return product.dataValues.productId });
+    const list_of_id = productCategories.map(function (product) { return product.dataValues.productId });
     let queryReturn = {}
 
-    for(let i=0; i<list_of_id.length; i++){
-        queryReturn[i]= await getSubData(list_of_id[i])
+    for (let i = 0; i < list_of_id.length; i++) {
+        queryReturn[i] = await getSubData(list_of_id[i])
     }
     return queryReturn
 
 }
 //La idea de esta funcion es dado un producto conseguir sus datos
-async function getSubData(productId){
-    const product= await Product.findOne({
+async function getSubData(productId) {
+    const product = await Product.findOne({
         where: {
             id: productId
         }
     })
-    const colors= await VariantColor.findAll({
-        where: {productId: product.dataValues.id}
+    const colors = await VariantColor.findAll({
+        where: { productId: product.dataValues.id }
     })
-    const list_of_id= colors.map(function(obj){ return obj.dataValues.id })
-    const sizes= await Variant_Size.findAll({
+    const list_of_id = colors.map(function (obj) { return obj.dataValues.id })
+    const sizes = await Variant_Size.findAll({
         where: {
             variant_color_id: list_of_id
         }
     })
-    product.dataValues.colors= colors;
-    product.dataValues.sizes= sizes;
+    product.dataValues.colors = colors;
+    product.dataValues.sizes = sizes;
 
     return product;
+}
+
+export async function getVariant(req, res) {
+
+    try {
+        const products = await Product.findAll({});
+        const colors = await VariantColor.findAll({});
+
+        res.json({ "products": products, "colors": colors })
+    } catch (error) {
+        res.json({ "error": error })
+    }
+
 }

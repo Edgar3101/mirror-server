@@ -14,6 +14,8 @@ export async function HomePage(req, res) {
   const color = await VariantColor.findAll();
   const sizes = await VariantSize.findAll();
   const categories = await Categories.findAll();
+ 
+  
   res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories });
 }
 

@@ -25,7 +25,7 @@ app.use('/assets', express.static(__dirname + '/assets'));
 
 
 app.use("/", routerProduct);
-app.use("/api", routerAPI);
+app.use("/api/", routerAPI);
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');

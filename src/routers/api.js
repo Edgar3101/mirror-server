@@ -1,10 +1,11 @@
 import {Router} from "express";
+import {getProducts, getVariant} from "../controllers/apiProducts(Refactor).js"
 const router = Router();
 
-import {getProducts} from "../controllers/apiProducts(Refactor)"
 
+router.get("/variant/", getVariant);
+router.get("/:codebar", getProducts);
 
-router.get("/:codebar", getProducts );
 
 
 
