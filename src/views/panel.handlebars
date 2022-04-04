@@ -186,7 +186,7 @@
                     <div class="form-group">
                       <label for="inputStatus">Color</label>
                       <select class="form-control custom-select" id="variant_color_id" name="variant_color_id">
-                        <option selected disabled>Seleccionar Uno</option>
+                        <option selected disabled id="option-disabled">Seleccionar Uno</option>
                                           
                     
                       </select>
@@ -305,6 +305,7 @@
      fetch("/api/variant/" + obj.value)
      .then(res => res.json())
      .then(data => {
+       document.querySelector("#variant_color_id").innerHTML= ""
        for(const i in data.colors){
          var option= document.createElement("option");
          option.innerText= "Color: " + data.colors[i].color;
