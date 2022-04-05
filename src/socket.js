@@ -19,6 +19,7 @@ wss.on("connection", function connection(ws) {
     wss.clients.forEach(async function each(client) {
       if (client.readyState === WebSocket.OPEN) {
         var buffer= JSON.parse(message.toString())
+        console.log(buffer)
         var data= await searchData(buffer)
         console.log(data)
         client.send(JSON.stringify(data));
@@ -51,5 +52,5 @@ async function searchData(buffer){
   })
 
   return { id: product.dataValues.id, title: product.dataValues.title, description: product.dataValues.description, 
-    color: color.dataValues.color, size: size.dataValues.size}
+    color: color.dataValues.color, size: size.dataValues.size, codebar: size.codebar}
 }
