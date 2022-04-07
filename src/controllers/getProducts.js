@@ -5,7 +5,7 @@ import VariantColor from "../models/Variant_Color";
 import * as path from "path";
 import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
-import xlsxFile from 'read-excel-file'
+const readXlsxFile = require('read-excel-file/node')
 
 
 //Esta vista se queda igual 
@@ -18,7 +18,7 @@ export async function HomePage(req, res) {
 
   res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories });
 }
-export function formPage(req, res){
+export function formPage(req, res) {
   res.render("read_excel")
 }
 
@@ -149,11 +149,12 @@ export async function DeleteProduct(req, res) {
 
 }
 
-async function ReadAyndExcel(req, res) {
+export async function ReadAyndExcel(req, res) {
   let sampleFile;
   let uploadPath;
 
   if (!req.files || Object.keys(req.files).length === 0) {
+    console.log(req.files)
     return res.status(400).send('No files were uploaded.');
   }
   sampleFile = req.files.sampleFile;
@@ -164,17 +165,66 @@ async function ReadAyndExcel(req, res) {
     uploadPath = __dirname.split("/controllers")[0] + "/public/" + sampleFile.name
   }
 
-  sampleFile.mv(uploadPath, function (err) {
+  sampleFile.mv(uploadPath, async function (err) {
     if (err) return res.status(500).send(err);
     if (!err) {
       //Sabemos hasta este punto que nos mandaran un excel con los datos
-      xlsxFile(uploadPath).then((rows) => {
-        console.log(rows);
-        console.table(rows);
+      readXlsxFile(uploadPath, { sheet: 'Modelo Prueba' }).then(async function(rows){
+        for (const i in rows) {
+          if (i !== "0") {
+            const category =  await Categories.count({ where: { name: rows[i][0] } }) > 0 ?  await Categories.findOne({ where: { name: rows[i][0] } }) :
+               await Categories.create({ name: rows[i][0] });
+            const product =  await Product.count({ where: { title: rows[i][1], description: rows[i][2], price: rows[i][3] } }) > 0 ?
+               await Product.findOne({ where: { title: rows[i][1], description: rows[i][2], price: rows[i][3] } }) :
+               await Product.create({ title: rows[i][1], description: rows[i][2], price: rows[i][3] });
+            //Luego de esta parte debemos asociar cada categoria con un producto
+
+            let product_category_exist =  await ProductCategories.count({ where: { productId: product.dataValues.id, categoryId: category.dataValues.id } }) > 0;
+            if (product_category_exist === false) {
+              //Si no existe alguna asociacion entonces la creamos
+              await ProductCategories.create({ productId: product.dataValues.id, categoryId: category.dataValues.id })
+            }
+            //A partir de aqui iremos con las variantes de color
+            let list_of_colors = rows[i][4].split(';');
+            for (const k in list_of_colors) {
+              var color_value = list_of_colors[k];
+              const colorModel =  await VariantColor.count({ where: { color: color_value, productId: product.dataValues.id } }) > 0 ?
+                 await VariantColor.findOne({ where: { color: color_value, productId: product.dataValues.id } }) :
+                await VariantColor.create({ color: color_value, productId: product.dataValues.id, image: rows[i][5].split(";")[k] });
+              //El detalle es que por cada color puede haber varias tallas
+              const list_of_sizes = rows[i][6].split(";")[k]; // -> Esto devuelve un string de los elementos que nos interesan
+              const list_of_stocks = rows[i][7].split(";")[k]
+              const list_of_codebars = rows[i][8].split(";")[k]
+              await createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel)
+            }
+
+
+
+          }
+        }
+
+
+
       })
+
+
+      res.json({ "success": "success" })
 
 
     }
   })
+
+}
+
+async function createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel) {
+  list_of_sizes = list_of_sizes.split(",");
+  list_of_stocks = list_of_stocks.split(",");
+  list_of_codebars = list_of_codebars.split(",");
+  for (const i in list_of_sizes) {
+    const variant_size_exist =await VariantSize.count({ where: { size: list_of_sizes[i], stock: list_of_stocks[i], codebar: list_of_codebars[i], variant_color_id: colorModel.dataValues.id } }) > 0;
+    if (variant_size_exist === false) {
+      await VariantSize.create({ size: list_of_sizes[i], stock: list_of_stocks[i], codebar: list_of_codebars[i], variant_color_id: colorModel.dataValues.id })
+    }
+  }
 
 }
