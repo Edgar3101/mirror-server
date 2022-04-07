@@ -5,7 +5,7 @@ import VariantColor from "../models/Variant_Color";
 import * as path from "path";
 import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
-
+import xlsxFile from 'read-excel-file'
 
 
 //Esta vista se queda igual 
@@ -14,9 +14,12 @@ export async function HomePage(req, res) {
   const color = await VariantColor.findAll();
   const sizes = await VariantSize.findAll();
   const categories = await Categories.findAll();
- 
-  
+
+
   res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories });
+}
+export function formPage(req, res){
+  res.render("read_excel")
 }
 
 //Esta vista es solo para crear los productos
@@ -146,3 +149,32 @@ export async function DeleteProduct(req, res) {
 
 }
 
+async function ReadAyndExcel(req, res) {
+  let sampleFile;
+  let uploadPath;
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  sampleFile = req.files.sampleFile;
+  var isWin = process.platform === "win32";
+  if (isWin) {
+    uploadPath = __dirname.split("\controllers")[0] + "\public\\" + sampleFile.name
+  } else {
+    uploadPath = __dirname.split("/controllers")[0] + "/public/" + sampleFile.name
+  }
+
+  sampleFile.mv(uploadPath, function (err) {
+    if (err) return res.status(500).send(err);
+    if (!err) {
+      //Sabemos hasta este punto que nos mandaran un excel con los datos
+      xlsxFile(uploadPath).then((rows) => {
+        console.log(rows);
+        console.table(rows);
+      })
+
+
+    }
+  })
+
+}
