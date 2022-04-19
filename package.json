@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec babel-node src/index.js 8001",
-    "build": "./node_modules/.bin/babel src --out-dir lib",
-    "socket": "nodemon --exec babel-node src/socket.js 8002"
+    "start": "babel-node src/index.js 8001",
+    "build": "node_modules/.bin/babel src --out-dir lib",
+    "socket": "babel-node src/socket.js 8002"
   },
   "keywords": [],
   "author": "",
@@ -29,10 +29,10 @@
     "ws": "^8.5.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.16.0",
-    "@babel/core": "^7.16.0",
-    "@babel/node": "^7.16.0",
-    "@babel/plugin-transform-async-to-generator": "^7.16.0",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.9",
+    "@babel/node": "^7.16.8",
+    "@babel/plugin-transform-async-to-generator": "^7.16.8",
     "@babel/preset-env": "^7.16.4",
     "babel-plugin-transform-runtime": "^6.23.0"
   }
