@@ -108,7 +108,6 @@ async function getSubData(productId) {
 }
 
 export async function getVariant(req, res) {
-
     try {
         const colors = await VariantColor.findAll({
             where: {
@@ -119,5 +118,4 @@ export async function getVariant(req, res) {
     } catch (error) {
         res.json({ "error": error })
     }
-
 }

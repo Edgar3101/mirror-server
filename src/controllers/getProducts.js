@@ -7,7 +7,45 @@ import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
 const readXlsxFile = require('read-excel-file/node')
 
+export async function checkifexistproduct(req, res) {
+  try {
+      const productexists = await Product.findAll({
+          where: {
+              title: req.query.title
+          }
+      });
+      return res.json({"result": productexists })
+  } catch (error) {
+      return res.json({ "error": error })
+  }
+}
 
+export async function checkifexistcolor(req, res) {
+  try {
+      const color = await VariantColor.findAll({
+          where: {
+              productId: req.query.product_id,
+              color:'#'+req.query.color
+          }
+      });
+      return res.json({"result": color })
+  } catch (error) {
+      return res.json({ "error": error })
+  }
+}
+export async function checkifexistsize(req, res) {
+  try {
+      const size = await VariantSize.findAll({
+          where: {
+              size:req.query.size,
+              variant_color_id:req.query.color_id
+          }
+      });
+      return res.json({"result": size })
+  } catch (error) {
+      return res.json({ "error": error })
+  }
+}
 //Esta vista se queda igual 
 export async function HomePage(req, res) {
   const query = await Product.findAll();
@@ -21,6 +59,7 @@ export async function HomePage(req, res) {
 export function formPage(req, res) {
   res.render("read_excel")
 }
+
 
 //Esta vista es solo para crear los productos
 export async function createProducts(req, res) {
@@ -147,6 +186,58 @@ export async function DeleteProduct(req, res) {
   console.log("Hello World")
   res.redirect("/")
 
+}
+export async function DeleteColor(req, res) {
+  console.log(req.body)
+  const color = await VariantColor.findOne({
+    where: {
+      id:req.body.variant_color_id
+    }
+  })
+  try {
+    const sizes = await VariantSize.findAll({ where: { variant_color_id: req.body.variant_color_id } });
+    sizes.map(obj => {
+      VariantSize.destroy({
+        where: {
+          id: obj.id
+        }
+      })
+    })
+    color.destroy()
+  } catch {
+    console.log("error")
+  }
+  console.log("Hello World")
+  res.redirect("/")
+
+}
+export async function DeleteSize(req, res) {
+  console.log(req.body)
+  const size = await VariantSize.findOne({
+    where: {
+      id:req.body.size_id
+    }
+  })
+  try {
+    size.destroy()
+  } catch {
+    console.log("error")
+  }
+  console.log("Hello World")
+  res.redirect("/")
+
+}
+export async function getsizes(req, res) {
+  try {
+      const sizes = await VariantSize.findAll({
+          where: {
+            variant_color_id: req.query.color_id
+          }
+      });
+      res.json({"size": sizes })
+  } catch (error) {
+      res.json({ "error": error })
+  }
 }
 
 export async function ReadAyndExcel(req, res) {

@@ -18,8 +18,7 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active">Project Add</li>
+                <li class="breadcrumb-item active">Añadir producto</li>
               </ol>
             </div>
           </div>
@@ -41,7 +40,7 @@
                   </button>
                 </div>
               </div>
-              <form action="/" method="POST" encType="multipart/form-data">
+              <form id="formadd" action="/" method="POST" encType="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="inputName">Nombre del producto</label>
@@ -62,10 +61,7 @@
                 </div>
                 <!-- /.card-body -->
             </div>
-            <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Producto</button>
-            <!--
-           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
-           -->
+            <button type="button" onclick="checkproduct()" class="btn btn-success float-right" value="Save"> Agregar Producto</button>
             </form>
             <!-- /.card -->
           </div>
@@ -95,7 +91,6 @@
                   <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Producto</button>
                 </form>
               </div>
-
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -120,7 +115,7 @@
 
                     <div class="form-group">
                       <label for="inputStatus">Producto</label>
-                      <select id="inputStatusColor" required class="form-control custom-select" name="product_id">
+                      <select id="inputStatusColor" required class="form-control custom-select productid1" name="product_id">
                         <option selected value="null">Seleccionar Uno</option>
                         {{#each query}}
                           {{#dataValues}}
@@ -132,7 +127,7 @@
                     <!-- Esta es el input de color -->
                     <div class="form-group" id="color">
                       <label for="inputClientCompany">Color</label>
-                      <input type="color" name="variant_color" class="form-control">
+                      <input type="color" name="variant_color" id="variant_color" class="form-control">
                     </div>
                     <!-- Este va a ser el input de la imagen -->
                     <h3>Subir foto del producto</h3>
@@ -142,17 +137,52 @@
                   <!-- /.card-body -->
                 </div>
                 
-                <!--
-           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
-           -->
-              
+  
               <!-- /.card -->
             </div>
-            <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Color</button>
+            <button type="button" onclick="checkcolor()" class="btn btn-success float-right" value="Save"> Agregar Color</button>
             </form>
 
           </div>
+          <div class="col-md-6">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Borrar color</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <form method="POST" action="/delete-color/" encType="multipart/form-data">
+                  <div class="form-group">
+                    <label for="inputStatus">Producto</label>
+                    <select id="inputStatus2" class="form-control custom-select" name="product_Id_delete" onchange="getColor(this,'#del_variant_color_id');">
+                      <option selected disabled>Seleccionar producto</option>
+                      {{#each query}}
+                      {{#dataValues}}
+                      <option value="{{ id }}">{{title}}</option>
+                      {{/dataValues}}
+                      {{/each }}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="inputStatus">Color</label>
+                      <select class="form-control custom-select" id="del_variant_color_id" name="variant_color_id" >
+                        <option selected disabled id="option-disabled">Seleccionar Uno</option>
+                                          
+                    
+                      </select>
+                  </div>
+                  <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Color</button>
+                </form>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
           </div>
+        </div>
 
           <!-- Este es el tercer modal para poder crear variantes de talla -->
         <div class="row mt-3">
@@ -167,7 +197,7 @@
                   </button>
                 </div>
               </div>
-              <form action="/add-variant/size/" method="POST" encType="multipart/form-data">
+              <form id="size_form" action="/add-variant/size/" method="POST" encType="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
 
@@ -194,7 +224,7 @@
                     <!-- Esta es el input de talla -->
                     <div class="form-group" id="size">
                       <label for="inputClientCompany">Talla</label>
-                      <input type="text" name="variant_size" class="form-control">
+                      <input type="text" name="variant_size" id="variant_size" class="form-control">
                     </div>
                     <!-- Este va a ser el input del stock -->
                 <div class="form-group" id="stock">
@@ -207,30 +237,103 @@
                       <label for="inputClientCompany">Codigo de Barras</label>
                       <input type="text" name="codebar" class="form-control">
                     </div>
-                  </div>
-                  <!-- /.card-body -->
                 </div>
-                
-                <!--
-           <input type="submit" value="Crear Producto" class="btn btn-success float-right">
-           -->
+                  <!-- /.card-body -->
+              </form>
+            </div>
               
               <!-- /.card -->
-              <button type="submit" class="btn btn-success float-right" value="Save"> Agregar Talla</button>
+              <button type="button" onclick="checksize()" class="btn btn-success float-right" value="Save"> Agregar Talla</button>
+              
+              <script>
+                function checkproduct(){
+                  producttitle=document.getElementById("nameproduct").value
+                  link='/api/checkprod/?title='+producttitle
+                  msg="Ya existe un producto con este nombre"
+                  formid='formadd'
+                  do_checkfetch(link,msg,formid)
+                }
+                function checkcolor(){
+                  color=document.getElementById("variant_color").value
+                  color=color.replace('#','')
+                  product_id=document.getElementsByClassName("productid1")[0].value
+                  link='/api/checkcolor/?color='+color + '&product_id='+product_id
+                  msg="Ya existe este color para el producto seleccionado"
+                  formid='color_form'
+                  do_checkfetch(link,msg,formid)
+                }
+                function checksize(){
+                  size=document.getElementById('variant_size').value
+                  color_id=document.getElementById("variant_color_id").value
+                  link='/api/checksize/?color_id='+color_id + "&size="+size
+                  msg="Ya existe esta talla para este color de producto"
+                  formid='size_form'
+                  do_checkfetch(link,msg,formid)
+                }
+                function do_checkfetch(link,msg,formid){
+                fetch(link)
+                  .then(res=>res.json())
+                  .then(res=>{
+                    console.log(link)
+                    console.log(res)
+                    results=res.result.length
+                    if(results>0){
+                      window.alert(msg)
+                    }else{
+                      document.getElementById(formid).submit()
+                    }
+                  })
+                }
+              </script>
+          </div>
+          <div class="col-md-6">
+            <div class="card card-secondary">
+              <div class="card-header">
+                <h3 class="card-title">Borrar Talla</h3>
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <form method="POST" action="/delete-size/" encType="multipart/form-data">
+                  <div class="form-group">
+                    <label for="inputStatus">Producto</label>
+                    <select id="inputStatus2" class="form-control custom-select" name="product_Id_delete" onchange="getColor(this,'#del_variant_color_id2',true)">
+                      <option selected disabled>Seleccionar producto</option>
+                      {{#each query}}
+                      {{#dataValues}}
+                      <option value="{{ id }}">{{title}}</option>
+                      {{/dataValues}}
+                      {{/each }}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="inputStatus">Color</label>
+                      <select class="form-control custom-select" id="del_variant_color_id2" name="color_id"  onchange="getSizes(this);">
+                        <option selected disabled id="option-disabled">Seleccionar Uno</option>
+                                          
+                    
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="inputStatus">Talla</label>
+                      <select class="form-control custom-select" id="del_variant_size_id" name="size_id" >
+                        <option selected disabled id="option-disabled">Seleccionar Uno</option>
+                                          
+                    
+                      </select>
+                  </div>
+                  <button type="submit" class="btn btn-danger float-right" value="Save"> Borrar Talla</button>
+                </form>
+              </div>
+              <!-- /.card-body -->
             </div>
-            
-            </form>
-
+            <!-- /.card -->
+          </div>
           </div>
         
-          <!-- 
-      <div class="row">
-        <div class="col-12">
-          <a href="#" class="btn btn-secondary">Cancelar</a>
-          <input type="submit" value="Crear Producto" class="btn btn-success float-right">
-        </div>
-      </div>
-      -->
       </section>
       <!-- /.content -->
     </div>
@@ -240,7 +343,7 @@
       <div class="float-right d-none d-sm-block">
         <b>Version</b> 3.2.0-rc
       </div>
-      <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; All rights reserved.
     </footer>
 
     <!-- Control Sidebar -->
@@ -300,18 +403,35 @@
 
    }
    */
-   function getColor(obj){
+   function getColor(obj,selectid="#variant_color_id",hassize=false){
      console.log(obj)
      fetch("/api/variant/" + obj.value)
      .then(res => res.json())
      .then(data => {
-       document.querySelector("#variant_color_id").innerHTML= ""
+       document.querySelector(selectid).innerHTML= ""
        for(const i in data.colors){
          var option= document.createElement("option");
          option.innerText= "Color: " + data.colors[i].color;
          option.value= data.colors[i].id;
          option.style.color= data.colors[i].color;
-         document.querySelector("#variant_color_id").appendChild(option);
+         document.querySelector(selectid).appendChild(option);
+       }
+      if (hassize==true){
+        getSizes(document.getElementById('del_variant_color_id2'))
+      }
+     })
+   }
+   function getSizes(obj){
+     fetch("/api/getsizes/?color_id=" + obj.value)
+     .then(res => res.json())
+     .then(data => {
+       console.log(data)
+       document.querySelector('#del_variant_size_id').innerHTML= ""
+       for(const i in data.size){
+         var option= document.createElement("option");
+         option.innerText= "Talla: " + data.size[i].size;
+         option.value= data.size[i].id;
+         document.querySelector('#del_variant_size_id').appendChild(option);
        }
 
      })
