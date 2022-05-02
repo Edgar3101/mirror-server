@@ -330,7 +330,7 @@ export async function DownloadExcel(req, res) {
 async function deleteFile(path) {
   var fs = require('fs');
   const sleep = ms => new Promise(r => setTimeout(r, ms));
-  await sleep(3000)
+  await sleep(5000) //Es mejor esperar 5 segundos por si son muchos productos
   await fs.unlinkSync(path)
 }
 
