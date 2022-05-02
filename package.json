@@ -6,7 +6,9 @@
   "scripts": {
     "start": "babel-node src/index.js 8001",
     "build": "node_modules/.bin/babel src --out-dir lib",
-    "socket": "babel-node src/socket.js 8002"
+    "socket": "babel-node src/socket.js 8002",
+    "dev": "nodemon --exec babel-node src/index.js 8001",
+    "dev_socket": "nodemon --exec babel-node src/socket.js 8002"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +20,7 @@
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
+    "excel4node": "^1.7.2",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-handlebars": "^6.0.2",

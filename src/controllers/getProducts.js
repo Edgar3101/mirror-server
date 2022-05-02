@@ -1,8 +1,7 @@
 import Product from "../models/Product"
 import VariantSize from "../models/Variant_Size";
-import * as fs from 'fs';
+var xl = require('excel4node');
 import VariantColor from "../models/Variant_Color";
-import * as path from "path";
 import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
 const readXlsxFile = require('read-excel-file/node')
@@ -318,4 +317,37 @@ async function createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars,
     }
   }
 
+}
+
+export async function DownloadExcel(req, res){
+
+
+  var wb= new xl.Workbook();
+  var ws= wb.addWorksheet('Sheet 1');
+
+  ws.cell(1,1).string("Productos")
+  ws.cell(1,2).string("Precio")
+  ws.cell(1,3).string("ID")
+
+  //Luego debemos buscar los productos en la base de datos y escribirlo en el archivo excel
+  const product= await Product.findAll();
+  var counter= 2;
+  product.map(obj => {
+    ws.cell(counter, 1).string(obj.dataValues.title);
+    ws.cell(counter, 2).number(obj.dataValues.price);
+    ws.cell(counter, 3).number(obj.dataValues.id)
+    counter++;
+  })
+
+  await wb.write(__dirname + "/products.xlsx")
+
+  deleteFile()
+
+  res.download(`${__dirname}/products.xlsx`);
+}
+async function deleteFile(){
+  var fs = require('fs');
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  await sleep(5000)
+  await fs.unlinkSync(__dirname + "/products.xlsx")
 }

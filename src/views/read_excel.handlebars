@@ -52,6 +52,42 @@
 
           <!-- /.card-body -->
         </div>
+
+        <!--Here we start with second card -->
+        <div class="col-md-12">
+          <!-- general form elements -->
+          <div class="card card-success">
+            <div class="card-header">
+              <h3 class="card-title">Borrar Archivos Mediante Excel</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            
+              <div class="card-body">
+                <h4> Primero descargue el excel con todos los productos y borre del excel los productos que no desea borrar</h4>
+                <button  class="btn btn-primary mb-3"><a style="color:white;" href="/download-excel/">Descargar Excel</a></button>
+                <h4> Luego suba el excel con los cambios</h4>
+                <form method="POST" action="/formexcel/" encType="multipart/form-data">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Archivo Excel</label>
+                 <input type="file" required name="sampleFile" />
+                 
+                </div>
+
+              </div>
+              <!-- /.card-body -->
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-success">Submit</button>
+              </div>
+            </form>
+          </div>
+          <!-- /.card -->
+
+          <!-- general form elements -->
+
+          <!-- /.card-body -->
+        </div>
         <!-- /.card -->
       </div>
       <!--/.col (right) -->
