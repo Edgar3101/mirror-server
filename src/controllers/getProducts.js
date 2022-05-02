@@ -321,11 +321,20 @@ export async function DownloadExcel(req, res) {
   products.map(obj => {
     results.push([{type:String, value: obj.dataValues.title}, {type:Number, value: obj.dataValues.price}, {type:Number, value:obj.dataValues.id}])
   })
+  var isWin = process.platform === "win32";
+  if(!isWin){
+    await writeXlsxFile(results, {filePath: __dirname + "/products.xlsx"})
+    deleteFile(__dirname + "/products.xlsx")
 
-  await writeXlsxFile(results, {filePath: __dirname + "/products.xlsx"})
-  deleteFile(__dirname + "/products.xlsx")
+    return res.download(__dirname + "/products.xlsx");
 
-  return res.download(__dirname + "/products.xlsx");
+  }else{
+    await writeXlsxFile(results, {filePath: __dirname + "\\products.xlsx"})
+    deleteFile(__dirname + "\\products.xlsx")
+
+    return res.download(__dirname + "\\products.xlsx");
+  }
+  
 }
 async function deleteFile(path) {
   var fs = require('fs');
