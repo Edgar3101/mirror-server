@@ -1,6 +1,6 @@
 import {Router} from "express";
 const router = Router();
-import {getsizes,checkifexistproduct,checkifexistcolor,checkifexistsize, HomePage, DownloadExcel, createProducts,  CreateVariantSize, CreateVariantColor, DeleteProduct,DeleteColor,DeleteSize, formPage,  ReadAyndExcel} from "../controllers/getProducts.js"
+import {getsizes,checkifexistproduct,checkifexistcolor,checkifexistsize, DeleteExcelProducts, HomePage, DownloadExcel, createProducts,  CreateVariantSize, CreateVariantColor, DeleteProduct,DeleteColor,DeleteSize, formPage,  ReadAyndExcel} from "../controllers/getProducts.js"
 
 router.get("/api/checkprod/",checkifexistproduct);
 router.get("/api/checkcolor/",checkifexistcolor);
@@ -17,6 +17,7 @@ router.post("/delete-size/", DeleteSize)
 router.get("/form/", formPage);
 router.post("/formexcel/", ReadAyndExcel)
 router.get("/download-excel/", DownloadExcel)
+router.post("/delete-excel/", DeleteExcelProducts)
 
 
 
