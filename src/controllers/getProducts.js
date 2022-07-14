@@ -6,6 +6,8 @@ import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
 const readXlsxFile = require('read-excel-file/node')
 
+var fs = require('fs');
+
 export async function checkifexistproduct(req, res) {
   try {
     const productexists = await Product.findAll({
@@ -13,9 +15,13 @@ export async function checkifexistproduct(req, res) {
         title: req.query.title
       }
     });
-    return res.json({ "result": productexists })
+    return res.json({
+      "result": productexists
+    })
   } catch (error) {
-    return res.json({ "error": error })
+    return res.json({
+      "error": error
+    })
   }
 }
 
@@ -27,9 +33,13 @@ export async function checkifexistcolor(req, res) {
         color: '#' + req.query.color
       }
     });
-    return res.json({ "result": color })
+    return res.json({
+      "result": color
+    })
   } catch (error) {
-    return res.json({ "error": error })
+    return res.json({
+      "error": error
+    })
   }
 }
 export async function checkifexistsize(req, res) {
@@ -40,9 +50,13 @@ export async function checkifexistsize(req, res) {
         variant_color_id: req.query.color_id
       }
     });
-    return res.json({ "result": size })
+    return res.json({
+      "result": size
+    })
   } catch (error) {
-    return res.json({ "error": error })
+    return res.json({
+      "error": error
+    })
   }
 }
 //Esta vista se queda igual 
@@ -53,7 +67,12 @@ export async function HomePage(req, res) {
   const categories = await Categories.findAll();
 
 
-  res.render('panel', { "query": query, "color": color, "sizes": sizes, "categories": categories });
+  res.render('panel', {
+    "query": query,
+    "color": color,
+    "sizes": sizes,
+    "categories": categories
+  });
 }
 export function formPage(req, res) {
   res.render("read_excel")
@@ -157,17 +176,25 @@ export async function DeleteProduct(req, res) {
     }
   })
   try {
-
-    const colors = await VariantColor.findAll({ where: { productId: product.id } });
-    const list_of_color_id = colors.map(function (obj) { return obj.id });
-    const sizes = await VariantSize.findAll({ where: { variant_color_id: list_of_color_id } });
+    const colors = await VariantColor.findAll({
+      where: {
+        productId: product.id
+      }
+    });
+    const list_of_color_id = colors.map(function (obj) {
+      return obj.id
+    });
+    const sizes = await VariantSize.findAll({
+      where: {
+        variant_color_id: list_of_color_id
+      }
+    });
     sizes.map(obj => {
       VariantSize.destroy({
         where: {
           id: obj.id
         }
       })
-
     })
 
     colors.map(obj => {
@@ -194,7 +221,11 @@ export async function DeleteColor(req, res) {
     }
   })
   try {
-    const sizes = await VariantSize.findAll({ where: { variant_color_id: req.body.variant_color_id } });
+    const sizes = await VariantSize.findAll({
+      where: {
+        variant_color_id: req.body.variant_color_id
+      }
+    });
     sizes.map(obj => {
       VariantSize.destroy({
         where: {
@@ -233,12 +264,15 @@ export async function getsizes(req, res) {
         variant_color_id: req.query.color_id
       }
     });
-    res.json({ "size": sizes })
+    res.json({
+      "size": sizes
+    })
   } catch (error) {
-    res.json({ "error": error })
+    res.json({
+      "error": error
+    })
   }
 }
-
 export async function ReadAyndExcel(req, res) {
   let sampleFile;
   let uploadPath;
@@ -258,83 +292,174 @@ export async function ReadAyndExcel(req, res) {
   sampleFile.mv(uploadPath, async function (err) {
     if (err) return res.status(500).send(err);
     if (!err) {
+      try{
+
+      
       //Sabemos hasta este punto que nos mandaran un excel con los datos
-      readXlsxFile(uploadPath, { sheet: 'Modelo Prueba' }).then(async function (rows) {
+      readXlsxFile(uploadPath, {
+        sheet: 'Modelo Prueba'
+      }).then(async function (rows) {
+        var errorList=[]
         for (const i in rows) {
           if (i !== "0") {
-            const category = await Categories.count({ where: { name: rows[i][0] } }) > 0 ? await Categories.findOne({ where: { name: rows[i][0] } }) :
-              await Categories.create({ name: rows[i][0] });
-            const product = await Product.count({ where: { title: rows[i][1], description: rows[i][2], price: rows[i][3] } }) > 0 ?
-              await Product.findOne({ where: { title: rows[i][1], description: rows[i][2], price: rows[i][3] } }) :
-              await Product.create({ title: rows[i][1], description: rows[i][2], price: rows[i][3] });
-            //Luego de esta parte debemos asociar cada categoria con un producto
+            //Ve la categoría, sino la crea
+            const arrayCat = {
+              name: rows[i][0]
+            }
+            const whereCat = {
+              where: arrayCat
+            }
+            const category = await Categories.count(whereCat) > 0 ? await Categories.findOne(whereCat) : await Categories.create(arrayCat);
 
-            let product_category_exist = await ProductCategories.count({ where: { productId: product.dataValues.id, categoryId: category.dataValues.id } }) > 0;
+            //Ve si hay un producto, sino lo crea
+            const arrayProd = {
+              title: rows[i][1],
+              description: rows[i][2],
+              price: rows[i][3]
+            }
+            const WhereProd = {
+              where: arrayProd
+            }
+            const product = await Product.count(WhereProd) > 0 ? await Product.findOne(WhereProd) : await Product.create(arrayProd);
+            //Luego de esta parte debemos asociar cada categoria con un producto
+            const arrayProdCat = {
+              productId: product.dataValues.id,
+              categoryId: category.dataValues.id
+            }
+            let product_category_exist = await ProductCategories.count({
+              where: arrayProdCat
+            }) > 0;
+
             if (product_category_exist === false) {
               //Si no existe alguna asociacion entonces la creamos
-              await ProductCategories.create({ productId: product.dataValues.id, categoryId: category.dataValues.id })
+              await ProductCategories.create(arrayProdCat)
             }
             //A partir de aqui iremos con las variantes de color
-            let list_of_colors = rows[i][4].split(';');
+            let colors = rows[i][4]
+            let list_of_colors = colors.split(';');
+
             for (const k in list_of_colors) {
               var color_value = list_of_colors[k];
-              const colorModel = await VariantColor.count({ where: { color: color_value, productId: product.dataValues.id } }) > 0 ?
-                await VariantColor.findOne({ where: { color: color_value, productId: product.dataValues.id } }) :
-                await VariantColor.create({ color: color_value, productId: product.dataValues.id, image: rows[i][5].split(";")[k] });
+              const whereVarColor = {
+                where: {
+                  color: color_value,
+                  productId: product.dataValues.id
+                }
+              }
+
+              const colorModel = await VariantColor.count(whereVarColor) > 0 ?
+                await VariantColor.findOne(whereVarColor) :
+                await VariantColor.create({
+                  color: color_value,
+                  productId: product.dataValues.id,
+                  image: rows[i][5].split(";")[k]
+                });
               //El detalle es que por cada color puede haber varias tallas
-              const list_of_sizes = rows[i][6].split(";")[k]; // -> Esto devuelve un string de los elementos que nos interesan
-              const list_of_stocks = rows[i][7].split(";")[k]
-              const list_of_codebars = rows[i][8].split(";")[k]
-              await createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel)
+              try {
+                const list_of_sizes = rows[i][6].split(";")[k]; // -> Esto devuelve un string de los elementos que nos interesan
+                var stocks = typeof rows[i][7] === 'string' ? rows[i][7] : rows[i][7].toString();
+                const list_of_stocks = stocks == 'undefined' ? '0' : stocks.split(";")[k];
+                var codebars = rows[i][8];
+                codebars = typeof codebars === 'string' ? codebars : codebars.toString();
+                const list_of_codebars = codebars.split(";")[k]
+                if (typeof list_of_codebars === 'undefined') {
+                  errorList.push({'product':rows[i][1],'color':color_value,'sizes':list_of_sizes,'reason':'No posee código de barras'})
+                  continue
+                }
+                await createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel)
+              } catch (error) {
+                errorList.push({'product':rows[i][1],'color':color_value,'sizes':rows[i][6].split(";")[k],'reason':'La cantidad de tallas ,stocks, codigo de barras, colores NO es la misma '})
+              }
             }
           }
         }
+        res.render('uploadedexcel', {
+          "query": errorList,
+        });
+    
       })
-      res.json({ "success": "success" })
-
-
+    }
+    catch(err){
+      res.json({"error":"El nombre de la hoja de su excel debe ser 'Modelo Prueba' (sin comillas)"})
+    }
+      
     }
   })
 
 }
 
 async function createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel) {
+  list_of_stocks = typeof list_of_stocks === 'string' ? list_of_stocks : list_of_stocks.toString();
+  list_of_codebars = typeof list_of_codebars === 'string' ? list_of_codebars : list_of_codebars.toString();
   list_of_sizes = list_of_sizes.split(",");
   list_of_stocks = list_of_stocks.split(",");
   list_of_codebars = list_of_codebars.split(",");
   for (const i in list_of_sizes) {
-    const variant_size_exist = await VariantSize.count({ where: { size: list_of_sizes[i], stock: list_of_stocks[i], codebar: list_of_codebars[i], variant_color_id: colorModel.dataValues.id } }) > 0;
-    if (variant_size_exist === false) {
-      await VariantSize.create({ size: list_of_sizes[i], stock: list_of_stocks[i], codebar: list_of_codebars[i], variant_color_id: colorModel.dataValues.id })
+    const arrayVarSize = {
+      size: list_of_sizes[i],
+      stock: list_of_stocks[i],
+      codebar: list_of_codebars[i],
+      variant_color_id: colorModel.dataValues.id
     }
+    const variant_size_exist = await VariantSize.count({
+      where: arrayVarSize
+    }) > 0;
+    if (variant_size_exist === false) {
+      await VariantSize.create(arrayVarSize)
+    }
+   
   }
 
 }
 
 export async function DownloadExcel(req, res) {
 
-  const products= await Product.findAll();
+  const products = await Product.findAll();
 
-  const results= [[{value:"Productos", fontWeight:20}, {value:"Precio", fontWeight: 20}, {value:"ID", fontWeight:20}]]
+  const results = [
+    [{
+      value: "Productos",
+      fontWeight: 20
+    }, {
+      value: "Precio",
+      fontWeight: 20
+    }, {
+      value: "ID",
+      fontWeight: 20
+    }]
+  ]
 
 
   products.map(obj => {
-    results.push([{type:String, value: obj.dataValues.title}, {type:Number, value: obj.dataValues.price}, {type:Number, value:obj.dataValues.id}])
+    results.push([{
+      type: String,
+      value: obj.dataValues.title
+    }, {
+      type: Number,
+      value: obj.dataValues.price
+    }, {
+      type: Number,
+      value: obj.dataValues.id
+    }])
   })
   var isWin = process.platform === "win32";
-  if(!isWin){
-    await writeXlsxFile(results, {filePath: __dirname + "/products.xlsx"})
+  if (!isWin) {
+    await writeXlsxFile(results, {
+      filePath: __dirname + "/products.xlsx"
+    })
     deleteFile(__dirname + "/products.xlsx")
 
     return res.download(__dirname + "/products.xlsx");
 
-  }else{
-    await writeXlsxFile(results, {filePath: __dirname + "\\products.xlsx"})
+  } else {
+    await writeXlsxFile(results, {
+      filePath: __dirname + "\\products.xlsx"
+    })
     deleteFile(__dirname + "\\products.xlsx")
 
     return res.download(__dirname + "\\products.xlsx");
   }
-  
+
 }
 async function deleteFile(path) {
   var fs = require('fs');
@@ -361,17 +486,31 @@ export async function DeleteExcelProducts(req, res) {
   sampleFile.mv(uploadPath, async function (err) {
     if (err) return res.send(err);
     if (!err) {
-      readXlsxFile(uploadPath, { sheet: 'Sheet1' }).then(async function (rows) {
+      readXlsxFile(uploadPath, {
+        sheet: 'Sheet1'
+      }).then(async function (rows) {
 
         for (const i in rows) {
           if (i !== "0") {
             console.log(rows[i])
             const product = await Product.findOne({
-              where: { "id": rows[i][2] }
+              where: {
+                "id": rows[i][2]
+              }
             })
-            const colors = await VariantColor.findAll({ where: { productId: product.id } });
-            const list_of_color_id = colors.map(function (obj) { return obj.id });
-            const sizes = await VariantSize.findAll({ where: { variant_color_id: list_of_color_id } });
+            const colors = await VariantColor.findAll({
+              where: {
+                productId: product.id
+              }
+            });
+            const list_of_color_id = colors.map(function (obj) {
+              return obj.id
+            });
+            const sizes = await VariantSize.findAll({
+              where: {
+                variant_color_id: list_of_color_id
+              }
+            });
             sizes.map(obj => {
               VariantSize.destroy({
                 where: {
