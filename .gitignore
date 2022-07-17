@@ -6,3 +6,4 @@ env
 /src/public/*.png
 /src/public/*.jpeg
 lib
+yarn.lock

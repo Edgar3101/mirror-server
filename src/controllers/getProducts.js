@@ -4,6 +4,7 @@ const writeXlsxFile = require('write-excel-file/node')
 import VariantColor from "../models/Variant_Color";
 import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
+import { copyFile } from 'node:fs/promises';
 const readXlsxFile = require('read-excel-file/node')
 
 var fs = require('fs');
@@ -346,7 +347,17 @@ export async function ReadAyndExcel(req, res) {
                   productId: product.dataValues.id
                 }
               }
-
+              var image_url=rows[i][5].split(";")[k];
+              var isWin = process.platform === "win32";
+              if (isWin) {
+                uploadPath = __dirname.split("\controllers")[0] + "\public\\" + image_url.substring(image_url.lastIndexOf("\\"), image_url.length)
+              } else {
+                uploadPath = __dirname.split("/controllers")[0] + "/public/" + image_url.substring(image_url.lastIndexOf("/"), image_url.length)
+              }
+              console.log(uploadPath)
+              if (fs.existsSync(image_url)) {
+                await copyFile(image_url, uploadPath);                          
+              }
               const colorModel = await VariantColor.count(whereVarColor) > 0 ?
                 await VariantColor.findOne(whereVarColor) :
                 await VariantColor.create({
