@@ -5,6 +5,8 @@ import VariantColor from "../models/Variant_Color";
 import Categories from "../models/Categories";
 import ProductCategories from "../models/ProductCategories";
 import { copyFile } from 'node:fs/promises';
+import { MissingData } from "../helpers/errors";
+import sequelize from "../db/connection";
 const readXlsxFile = require('read-excel-file/node')
 
 var fs = require('fs');
@@ -303,85 +305,122 @@ export async function ReadAyndExcel(req, res) {
         var errorList=[]
         for (const i in rows) {
           if (i !== "0") {
-            //Ve la categoría, sino la crea
-            const arrayCat = {
-              name: rows[i][0]
-            }
-            const whereCat = {
-              where: arrayCat
-            }
-            const category = await Categories.count(whereCat) > 0 ? await Categories.findOne(whereCat) : await Categories.create(arrayCat);
-
-            //Ve si hay un producto, sino lo crea
-            const arrayProd = {
-              title: rows[i][1],
-              description: rows[i][2],
-              price: rows[i][3]
-            }
-            const WhereProd = {
-              where: arrayProd
-            }
-            const product = await Product.count(WhereProd) > 0 ? await Product.findOne(WhereProd) : await Product.create(arrayProd);
-            //Luego de esta parte debemos asociar cada categoria con un producto
-            const arrayProdCat = {
-              productId: product.dataValues.id,
-              categoryId: category.dataValues.id
-            }
-            let product_category_exist = await ProductCategories.count({
-              where: arrayProdCat
-            }) > 0;
-
-            if (product_category_exist === false) {
-              //Si no existe alguna asociacion entonces la creamos
-              await ProductCategories.create(arrayProdCat)
-            }
-            //A partir de aqui iremos con las variantes de color
-            let colors = rows[i][4]
-            let list_of_colors = colors.split(';');
-
-            for (const k in list_of_colors) {
-              var color_value = list_of_colors[k];
-              const whereVarColor = {
-                where: {
-                  color: color_value,
-                  productId: product.dataValues.id
+            try{
+              //Ve la categoría, sino la crea
+              await sequelize.transaction(async (t) =>{
+                var promises= [];
+              })
+                const arrayCat = {
+                  name: rows[i][0]
                 }
-              }
-              var image_url=rows[i][5].split(";")[k];
-              var isWin = process.platform === "win32";
-              if (isWin) {
-                uploadPath = __dirname.split("\controllers")[0] + "\public\\" + image_url.substring(image_url.lastIndexOf("\\"), image_url.length)
-              } else {
-                uploadPath = __dirname.split("/controllers")[0] + "/public/" + image_url.substring(image_url.lastIndexOf("/"), image_url.length)
-              }
-              console.log(uploadPath)
-              if (fs.existsSync(image_url)) {
-                await copyFile(image_url, uploadPath);                          
-              }
-              const colorModel = await VariantColor.count(whereVarColor) > 0 ?
-                await VariantColor.findOne(whereVarColor) :
-                await VariantColor.create({
-                  color: color_value,
+                const whereCat = {
+                  where: arrayCat
+                }
+                const category = await Categories.count(whereCat) > 0 ? await Categories.findOne(whereCat) : await Categories.create(arrayCat, { transaction: t });
+    
+                //Ve si hay un producto, sino lo crea
+                const arrayProd = {
+                  title: rows[i][1],
+                  description: rows[i][2],
+                  price: rows[i][3]
+                }
+                const WhereProd = {
+                  where: arrayProd
+                }
+                const product = await Product.count(WhereProd) > 0 ? await Product.findOne(WhereProd) : await Product.create(arrayProd, { transaction: t });
+                //Luego de esta parte debemos asociar cada categoria con un producto
+                const arrayProdCat = {
                   productId: product.dataValues.id,
-                  image: rows[i][5].split(";")[k]
-                });
-              //El detalle es que por cada color puede haber varias tallas
-              try {
-                const list_of_sizes = rows[i][6].split(";")[k]; // -> Esto devuelve un string de los elementos que nos interesan
-                var stocks = typeof rows[i][7] === 'string' ? rows[i][7] : rows[i][7].toString();
-                const list_of_stocks = stocks == 'undefined' ? '0' : stocks.split(";")[k];
-                var codebars = rows[i][8];
-                codebars = typeof codebars === 'string' ? codebars : codebars.toString();
-                const list_of_codebars = codebars.split(";")[k]
-                if (typeof list_of_codebars === 'undefined') {
-                  errorList.push({'product':rows[i][1],'color':color_value,'sizes':list_of_sizes,'reason':'No posee código de barras'})
-                  continue
+                  categoryId: category.dataValues.id
                 }
-                await createSizesExcel(list_of_sizes, list_of_stocks, list_of_codebars, colorModel)
-              } catch (error) {
-                errorList.push({'product':rows[i][1],'color':color_value,'sizes':rows[i][6].split(";")[k],'reason':'La cantidad de tallas ,stocks, codigo de barras, colores NO es la misma '})
+                let product_category_exist = await ProductCategories.count({
+                  where: arrayProdCat
+                }) > 0;
+    
+                if (product_category_exist === false) {
+                  //Si no existe alguna asociacion entonces la creamos
+                  await ProductCategories.create(arrayProdCat, { transaction: t })
+                }
+                //A partir de aqui iremos con las variantes de color
+                let colors = rows[i][4]
+                let list_of_colors = colors.split(';');
+    
+                for (const k in list_of_colors) {
+                  var color_value = list_of_colors[k];
+                  const whereVarColor = {
+                    where: {
+                      color: color_value,
+                      productId: product.dataValues.id
+                    }
+                  }
+                  var image_url=rows[i][5].split(";")[k];
+                  if(image_url === undefined || image_url === "" || image_url === null){
+                    throw new MissingData( "error",{'product':rows[i][1],'color':color_value,'sizes':rows[i][6].split(";")[k],'reason':'La imagen proporcionada no es valida'});
+                  }
+                  var isWin = process.platform === "win32";
+                  if (isWin) {
+                    uploadPath = __dirname.split("\controllers")[0] + "\public\\" + image_url.substring(image_url.lastIndexOf("\\"), image_url.length)
+                  } else {
+                    uploadPath = __dirname.split("/controllers")[0] + "/public/" + image_url.substring(image_url.lastIndexOf("/"), image_url.length)
+                  }
+    
+                  if (fs.existsSync(image_url)) {
+                    await copyFile(image_url, uploadPath);                          
+                  }else{
+                    throw new MissingData("error", {'product':rows[i][1],'color':color_value,'sizes':rows[i][6].split(";")[k],'reason':'La imagen proporcionada no es valida'})
+                  }
+                  const colorModel = await VariantColor.count(whereVarColor) > 0 ?
+                    await VariantColor.findOne(whereVarColor) :
+                    await VariantColor.create({
+                      color: color_value,
+                      productId: product.dataValues.id,
+                      image: rows[i][5].split(";")[k]
+                    }, { transaction: t });
+                  //El detalle es que por cada color puede haber varias tallas
+                  try {
+                    var list_of_sizes = rows[i][6].split(";")[k]; // -> Esto devuelve un string de los elementos que nos interesan
+                    var stocks = typeof rows[i][7] === 'string' ? rows[i][7] : rows[i][7].toString();
+                    var list_of_stocks = stocks == 'undefined' ? '0' : stocks.split(";")[k];
+                    var codebars = rows[i][8];
+                    codebars = typeof codebars === 'string' ? codebars : codebars.toString();
+                    var list_of_codebars = codebars.split(";")[k]
+                    if (typeof list_of_codebars === 'undefined') {
+                      throw new MissingData( "error" ,{'product':rows[i][1],'color':color_value,'sizes':list_of_sizes,'reason':'No posee código de barras'})
+                    }else{
+                      list_of_stocks = typeof list_of_stocks === 'string' ? list_of_stocks : list_of_stocks.toString();
+                      list_of_codebars = typeof list_of_codebars === 'string' ? list_of_codebars : list_of_codebars.toString();
+                      list_of_sizes = list_of_sizes.split(",");
+                      list_of_stocks = list_of_stocks.split(",");
+                      list_of_codebars = list_of_codebars.split(",");
+                      for (const i in list_of_sizes) {
+                        const arrayVarSize = {
+                          size: list_of_sizes[i],
+                          stock: list_of_stocks[i],
+                          codebar: list_of_codebars[i],
+                          variant_color_id: colorModel.dataValues.id
+                        }
+                        const variant_size_exist = await VariantSize.count({
+                          where: arrayVarSize
+                        }) > 0;
+                        if (variant_size_exist === false) {
+                          await VariantSize.create(arrayVarSize)
+                        }
+                      
+                      }   
+                      console.log("1 product Created")  
+                    }
+                                 
+                  } catch (error) {
+                    throw new MissingData("error" ,{'product':rows[i][1],'color':color_value,'sizes':rows[i][6].split(";")[k],'reason':'La cantidad de tallas ,stocks, codigo de barras, colores NO es la misma '})
+                  }
+                }
+            }catch(error){
+              if(error instanceof MissingData){
+                console.log(error.object)  
+                errorList.push(error.object)         
               }
             }
+            
           }
         }
         res.render('uploadedexcel', {
